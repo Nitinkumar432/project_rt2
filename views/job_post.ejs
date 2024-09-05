@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard - Rozgar Setu</title>
+    <link rel="stylesheet" href="css/job_post.css">
+    <script src="scripts/job_post.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <header class="company-header">
+        <img src="/images/trpzgarsetu.png" alt="Company Logo" class="company-logo">
+        
+         <div class="search-container">
+            <input type="texts" class="search-input" placeholder="Search...">
+            <img src="https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-vector-search-icon-png-image_320926.jpg" alt="Search Icon" class="search-icon">
+        </div>
+         
+        <nav class="company-nav">
+            <a href="/">Dashboard</a>
+            <a href="postJob">Post Job</a>
+            <a href="/profile">Profile</a>
+        </nav>
+        <div class="notification-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/4226/4226663.png" alt="Notification Icon" class="notification-icon">
+            <span class="notification-badge">3</span> <!-- Optional: Badge for unread notifications -->
+        </div>
+    </header>
+
+    <div class="container">
+        <p class="head-form">Post a Job <span class="company_name"><%=company.companyName %></span></p>
+        <form id="jobPostForm">
+            <div class="form-group">
+                <label for="title">Job Title:</label>
+                <input type="text" id="title" name="title" placeholder="Enter job title" required  >
+            </div>
+            <div class="form-group">
+                <label for="description">Job Description:</label>
+                <textarea id="description" name="description" rows="5" placeholder="Enter job description" required ></textarea>
+            </div>
+            <div class="form-group">
+                <label for="total_post">Total Posts:</label>
+                <input type="number" id="total_post" name="total_post" placeholder="Enter total posts" required>
+            </div>
+            <div class="form-group">
+                <label for="minSalary">Minimum Salary:</label>
+                <input type="number" id="minSalary" name="minSalary" placeholder="Enter minimum salary" required >
+            </div>
+            <div class="form-group">
+                <label for="maxSalary">Maximum Salary:</label>
+                <input type="number" id="maxSalary" name="maxSalary" placeholder="Enter maximum salary" required>
+            </div>
+            <div class="form-group">
+                <label for="currency">Currency:</label>
+                <select id="currency" name="currency" required>
+                    <option value="">Select Currency</option>
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="jobType">Job Type:</label>
+                <select id="jobType" name="jobType" required>
+                    <option value="">Select Job Type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Temporary">Temporary</option>
+                    <option value="Internship">Internship</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="workingHours">Working Hours:</label>
+                <select id="workingHours" name="workingHours" required>
+                    <option value="">Select Working Hours</option>
+                    <option value="Day Shift">Day Shift</option>
+                    <option value="Night Shift">Night Shift</option>
+                    <option value="Rotational Shift">Rotational Shift</option>
+                    <option value="Flexible">Flexible</option>
+                    <option value="Weekend">Weekend</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="companyName">Company Name:</label>
+                <input  type="text" id="companyName" name="companyName" placeholder="Enter company name" value="<%= company.companyName %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="companyId">Company Id:</label>
+                <input  type="text" id="companyId" name="companyId" placeholder="Enter company Id" value="<%= company.CompanyId %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="companyLogo">Company Logo:</label>
+                <input type="text" id="companyLogo" name="companyLogo" placeholder="Enter image URL" >
+            </div>
+            <div class="form-group">
+                <label for="companyWebsite">Company Website:</label>
+                <input type="text" id="companyWebsite" name="companyWebsite" placeholder="Enter company website" value="<%= company.website %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="streetAddress">Street Address:</label>
+                <input type="text" id="streetAddress" name="streetAddress" placeholder="Enter street address" value="<%=company.companyAddress %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" placeholder="Enter city" required >
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" placeholder="Enter state" required >
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" placeholder="Enter country" required >
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <input type="text" id="postalCode" name="postalCode" placeholder="Enter postal code" required >
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience (in years):</label>
+                <input type="number" id="experience" name="experience" placeholder="Enter experience" required >
+            </div>
+            <div class="form-group">
+                <label for="skills">Skills (comma-separated):</label>
+                <input type="text" id="skills" name="skills" placeholder="Enter skills" required >
+            </div>
+            <div class="form-group">
+                <label for="education">Education:</label>
+                <input type="text" id="education" name="education" placeholder="Enter education" required >
+            </div>
+            <div class="form-group">
+                <label for="certifications">Certifications (comma-separated):</label>
+                <input type="text" id="certifications" name="certifications" placeholder="Enter certifications" >
+            </div>
+            <div class="form-group">
+                <label for="contactEmail">Contact Email:</label>
+                <input type="email" id="contactEmail" name="contactEmail" placeholder="Enter contact email" value="<%=company.contactEmail %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Contact Phone:</label>
+                <input type="tel" id="contactPhone" name="contactPhone" placeholder="Enter contact phone" value="<%=company.contactPhone %>" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="benefits">Benefits (comma-separated):</label>
+                <input type="text" id="benefits" name="benefits" placeholder="Enter benefits" >
+            </div>
+            <div class="form-group">
+                <label for="applicationDeadline">Application Deadline:</label>
+                <input type="date" id="applicationDeadline" name="applicationDeadline" required >
+            </div>
+            <div id="errorContainer" class="error-container hidden">Please fill out all required fields.</div>
+            <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+        </form>
+    </div>
+ 
+
+  <!-- Spinner for Loading Indication -->
+<div id="spinner" class="spinner hidden"></div>
+
+<!-- Background Overlay for Blur Effect -->
+<div id="overlay" class="overlay hidden"></div>
+
+<!-- Preview Container -->
+<div id="previewContainer" class="preview-container hidden">
+    <div class="preview-header">
+        <h2>Job Post Preview</h2>
+        <button id="closePreview" class="close-btn">×</button>
+    </div>
+    <div id="previewContent"></div>
+    <button id="confirmSubmitBtn" class="submit-btn">Confirm Submit</button>
+    <button id="editFormBtn" class="submit-btn">Edit</button>
+</div>
+
+<!-- Success Message Container -->
+<div id="successContainer" class="success-container hidden">
+    <div class="success-content">
+        <h2>Job Posted Successfully</h2>
+        <p>We will verify and notify you soon.</p>
+        <button onclick="closeSuccess()">Close</button>
+    </div>
+</div>
+
+
+  <footer class="company-footer">
+        <p>&copy; 2024 Rozgar Setu. All rights reserved.</p>
+    </footer> 
+
+    <script src="scripts/home.js"></script>
+</body>
+</html>

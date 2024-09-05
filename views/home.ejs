@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard - Rozgar Setu</title>
+    <link rel="stylesheet" href="css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <style>
+        /* Add your custom styles here */
+    </style>
+</head>
+<body>
+    <header class="company-header">
+        <img src="/images/trpzgarsetu.png" alt="Company Logo" class="company-logo">
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search...">
+            <img src="https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-vector-search-icon-png-image_320926.jpg" alt="Search Icon" class="search-icon">
+        </div>
+        
+        <nav class="company-nav">
+            <a href="/track-jobs">Track-Jobs</a>
+            <a href="/">Dashboard</a>
+            <a href="/post_job">Post Job</a>
+            <a href="/profile">Profile</a>
+        </nav>
+        <div class="notification-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/4226/4226663.png" alt="Notification Icon" class="notification-icon">
+            <span class="notification-badge">3</span> <!-- Optional: Badge for unread notifications -->
+        </div>
+    </header>
+
+    <main class="company-content">
+        <section id="dashboard" class="dashboard-section">
+            <h2>Welcome <span class="highlighted-company-name"><%= company.companyName %></span></h2>
+            <div class="metrics">
+                <div class="metric-item">
+                    <h3>Total Jobs Posted : 20</h3>
+                    
+                    <p>45</p>
+                    <button class="view-details-button" onclick="window.location.href='/jobs-posted-details';">
+                        View Details <span class="arrow-icon">→</span>
+                    </button>
+                </div>
+                <div class="metric-item">
+                  
+                    <h3>Total Applicants : 656</h3>
+                  
+                    <p>45</p>
+                    <button class="view-details-button" onclick="window.location.href='/applicants-details';">
+                        View Details <span class="arrow-icon">→</span>
+                    </button>
+                   
+                </div>
+                <div class="metric-item">
+                    <h3>Active Jobs : 8</h3>
+                    <p>45</p>
+                    <button class="view-details-button" onclick="window.location.href='/active-jobs-details';">
+                        View Details <span class="arrow-icon">→</span>
+                    </button>
+                </div>
+                <div class="metric-item">
+                    <h3>Company Rating : 4.1/5</h3>
+                    <p>45</p>
+                    <button class="view-details-button" onclick="window.location.href='/company-rating-details';">
+                        View Details <span class="arrow-icon">→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div class="graph-container">
+        <div class="graph-card">
+            <h3>Live Status</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <div class="graph-card">
+            <h3>Job Statistics</h3>
+            <canvas id="jobStatsChart"></canvas>
+        </div>
+    </div>
+    
+
+        <section id="postJob" class="post-job-section">
+            <h2>Post a New Job</h2>
+            <p>To post a new job, fill in the details and click "Submit Job". Ensure you provide accurate information to attract the right candidates.</p>
+            <a href="/post_job" >
+                <button class="btn-post-job">Post a Job</button>
+              </a>
+            
+            <!-- Job Posting Modal -->
+           
+        </section>
+     
+            <!-- New section for recently posted jobs -->
+            <section id="recent-jobs-section" class="recent-jobs-container">
+                <h3 class="recent-jobs-title">Recently Posted Jobs</h3>
+                <div class="recent-jobs-grid">
+                    <!-- Sample Job Post 1 -->
+                    <div class="recent-job-item">
+
+                        <h4 class="job-title">Job Title 1</h4>
+                        <p><strong>Location:</strong> City 1</p>
+                        <p><strong>Salary:</strong> $50,000</p>
+                        <p><strong>Date Posted:</strong> 2024-08-25</p>
+                        <div class="recent-job-actions">
+                            <button class="edit-job-btn" onclick="window.location.href='/edit-job/1';">Edit</button>
+                            <button class="details-job-btn" onclick="window.location.href='/job-details/1';">View Details</button>
+                        </div>
+                    </div>
+        
+                    <!-- Sample Job Post 2 -->
+                    <div class="recent-job-item">
+                      
+                        <h4 class="job-title">Job Title 2</h4>
+                        <p><strong>Location:</strong> City 2</p>
+                        <p><strong>Salary:</strong> $60,000</p>
+                        <p><strong>Date Posted:</strong> 2024-08-20</p>
+                        <div class="recent-job-actions">
+                            <button class="edit-job-btn" onclick="window.location.href='/edit-job/2';">Edit</button>
+                            <button class="details-job-btn" onclick="window.location.href='/job-details/2';">View Details</button>
+                        </div>
+                    </div>
+        
+                    <!-- Sample Job Post 3 -->
+                    <div class="recent-job-item">
+             
+                        <h4 class="job-title">Job Title 3</h4>
+                        <p><strong>Location:</strong> City 3</p>
+                        <p><strong>Salary:</strong> $55,000</p>
+                        <p><strong>Date Posted:</strong> 2024-08-15</p>
+                        <div class="recent-job-actions">
+                            <button class="edit-job-btn" onclick="window.location.href='/edit-job/3';">Edit</button>
+                            <button class="details-job-btn" onclick="window.location.href='/job-details/3';">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        <section id="importantInfo" class="important-info-section">
+            <h2>Important Information for Posting a Job</h2>
+            <ul>
+                <li>Ensure the job title accurately reflects the role.</li>
+                <li>Provide a clear and concise job description.</li>
+                <li>Include the exact location where the job will be performed.</li>
+                <li>Specify the salary range to attract the right candidates.</li>
+                <li>Select the appropriate job type (Full-Time, Part-Time, or Contract).</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="company-footer">
+        <p>&copy; 2024 Rozgar Setu. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts/home.js"></script>
+    
+</body>
+</html>

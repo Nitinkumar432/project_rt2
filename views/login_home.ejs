@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Edu+VIC+WA+NT+Beginner:wght@500&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <link rel="stylesheet" href="/css/login_home.css">
+    <script src="/scripts/login_home.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <img src="/images/trpzgarsetu.png" alt="Logo">
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- Main Content -->
+    <main>
+        <div class="main-container">
+            <div class="advertisement-container">
+                <h1 class="text">We are <span class="auto-input"></span></h1>
+                <div class="advertisement-content"></div>
+              
+        
+
+               
+            </div>
+            
+            <div class="login-container">
+                <h2>Login to Your Company Account</h2>
+                <form id="login-form" action="/company_login" method="POST" class="login-form">
+                    <div class="form-group">
+                        <label for="company_id">Company ID:</label>
+                        <input type="text" id="company_id" name="company_id" placeholder="Enter Company ID or Email Id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="login-button">Login</button>
+                    </div>
+                    <div class="form-group">
+                        <a href="#"  onclick="openModal()" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <div id="spinners" class="spinners"></div>
+                </form>
+                <div class="alternative-login">
+                    <h3>Don't have an account?</h3>
+                    <a href="/company_register" class="register-link">Register Here</a>
+                </div>
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="loading-line"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- fogot password -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Reset Password</h2>
+            <form id="resetPasswordForm">
+                <!-- Email Section -->
+                <div id="emailSection">
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                    <button type="button" onclick="sendOTP()">Send OTP</button>
+                </div>
+      
+                <!-- OTP Verification Section -->
+                <div id="otpSection" style="display:none;">
+                    <input type="text" id="otpInput" placeholder="Enter OTP" required>
+                    <input type="password" id="newPassword" placeholder="New Password" required>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <button type="button" onclick="verifyOTP()">Verify OTP & Update Password</button>
+                </div>
+      
+                <!-- Message Section -->
+                <div id="message"></div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2024 Company. All rights reserved.</p>
+            <nav>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+</body>
+</html>

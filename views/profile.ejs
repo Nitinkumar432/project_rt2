@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile</title>
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/profile.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <aside class="sidebar">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="#company-details"><i class="fas fa-building"></i> Company Details</a></li>
+                <li><a href="#company-stats"><i class="fas fa-chart-line"></i> Company Statistics</a></li>
+                <li><a href="#recent-jobs"><i class="fas fa-briefcase"></i> Recent Jobs</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#company-details"><i class="fas fa-building"></i> Payments</a></li>
+                <li><a href="#company-stats"><i class="fas fa-chart-line"></i> Contract</a></li>
+                <li><a href="#recent-jobs"><i class="fas fa-briefcase"></i> Event</a></li>
+                <li><a href="#contact"> <i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        <hr>
+        <br>
+        <br>
+        <br>
+        <br>
+            <h3>Upcoming Events</h3>
+            <div class="event">
+                <img src="https://media.istockphoto.com/id/499517325/photo/a-man-speaking-at-a-business-conference.jpg?s=612x612&w=0&k=20&c=gWTTDs_Hl6AEGOunoQ2LsjrcTJkknf9G8BGqsywyEtE=" alt="Event 1" class="event-image">
+                <div class="event-details">
+                    <h4>Event Name 1</h4>
+                    <p>Date: January 15, 2024</p>
+                    <p>Description: Join us for an exciting event where we will discuss industry trends and innovations.</p>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpOcOB8ZVDS15WzkCktFW5wVDoRmD0fHm8Aw&s" alt="Event 2" class="event-image">
+                <div class="event-details">
+                    <h4>Event Name 2</h4>
+                    <p>Date: February 20, 2024</p>
+                    <p>Description: A networking event for professionals in the tech industry.</p>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpOcOB8ZVDS15WzkCktFW5wVDoRmD0fHm8Aw&s" alt="Event 3" class="event-image">
+                <div class="event-details">
+                    <h4>Event Name 3</h4>
+                    <p>Date: March 10, 2024</p>
+                    <p>Description: A workshop on best practices in project management.</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="company-content">
+            <section class="company-header">
+                <img src="https://1000logos.net/wp-content/uploads/2020/04/Tata-Logo-1988.png" alt="Company Logo" class="company-logo">
+                <div>
+                    <h2>Welcome, <%= company.companyName %>!</h2>
+                    <p><strong>Company ID:</strong> <%= company.CompanyId %></p>
+                    <p><strong>Status:</strong> <span class="status <%= company.isVerified ? 'verified' : 'not-verified' %>"><%= company.isVerified ? 'Verified' : 'Not Verified' %></span></p>
+                </div>
+            </section>
+
+            <!-- Graphs Section -->
+            <section id="company-stats">
+                <h3><i class="fas fa-chart-line"></i> Company Statistics</h3>
+                <canvas id="companyStatsChart"></canvas>
+            </section>
+
+            <!-- Details Section -->
+            <section id="company-details" class="company-details">
+                <h3><i class="fas fa-building"></i> Company Details</h3>
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <p><strong>Contact Email:</strong> <a href="mailto:<%= company.contactEmail %>"><%= company.contactEmail %></a></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-phone"></i>
+                    <p><strong>Contact Phone:</strong> <a href="tel:<%= company.contactPhone %>"><%= company.contactPhone %></a></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p><strong>Address:</strong> <%= company.companyAddress %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-id-card"></i>
+                    <p><strong>Registration:</strong> <%= company.companyRegistration %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-file-invoice"></i>
+                    <p><strong>Tax ID:</strong> <%= company.taxId %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-industry"></i>
+                    <p><strong>Industry:</strong> <%= company.industry %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <p><strong>Size:</strong> <%= company.companySize %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-globe"></i>
+                    <p><strong>Website:</strong> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-info-circle"></i>
+                    <p><strong>Description:</strong> <%= company.companyDescription %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <p><strong>Finances:</strong> <%= company.finances %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-friends"></i>
+                    <p><strong>Number of Employees:</strong> <%= company.numberOfEmployees %></p>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-key"></i>
+                    <p><strong>Reference Number:</strong> <%= company.referenceNumber %></p>
+                </div>
+                <button class="edit-button">Edit Company Details</button>
+            </section>
+
+            <!-- Recent Jobs Section -->
+            <section id="recent-jobs">
+                <h3><i class="fas fa-briefcase"></i> Recent Jobs</h3>
+                <div class="recent-jobs-container">
+                    <div class="recent-job">
+                        <h4>Software Engineer</h4>
+                        <p>Status: <span class="status accepted">Accepted</span></p>
+                    </div>
+                    <div class="recent-job">
+                        <h4>Product Manager</h4>
+                        <p>Status: <span class="status pending">Pending</span></p>
+                    </div>
+                    <div class="recent-job">
+                        <h4>UX Designer</h4>
+                        <p>Status: <span class="status rejected">Rejected</span></p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 RozgarSetu</p>
+    </footer>
+</body>
+</html>

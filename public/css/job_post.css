@@ -1,0 +1,570 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', 'Poppins', sans-serif;
+   background-image: url("https://img.freepik.com/free-photo/vintage-wallpaper-background_53876-25249.jpg");
+   background-repeat: no-repeat;
+   background-size: cover;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+
+
+.company-logo {
+    height: 50px;
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222933;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-logo {
+    height: 40px;
+}
+
+.company-nav {
+    display: flex;
+    align-items: center;
+}
+
+.company-nav a {
+    color: #fff;
+    margin-left: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.company-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcd00;
+    transition: width 0.3s ease;
+}
+
+.company-nav a:hover {
+    color: #ffcd00;
+}
+
+.company-nav a:hover::after {
+    width: 100%;
+}
+
+.company-nav a i {
+    margin-right: 5px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the search bar */
+    flex-grow: 1; /* Allow the search bar to take up available space */
+    margin: 0 20px; /* Add some margin for spacing */
+}
+
+.search-input {
+    height: 45px; /* Increased height for a larger input */
+    padding: 0 15px; /* Increased padding for better text visibility */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 25px; /* Slightly larger rounded corners */
+    font-size: 18px; /* Increased font size for better readability */
+    outline: none; /* Remove outline */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+    width: 30%; /* Ensure the input takes full width of the container */
+}
+
+
+
+.search-input:focus {
+    border-color: #ffcd00; /* Change border color on focus */
+}
+
+.search-icon {
+    height: 25px; /* Increased height for the icon */
+    margin-left: -35px; /* Adjust positioning relative to input */
+    cursor: pointer; /* Change cursor to pointer */
+}
+/* notification section */
+.notification-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px; /* Space between nav and notification */
+}
+
+.notification-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Adjust position */
+    right: -10px; /* Adjust position */
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px; /* Adjust size as needed */
+}
+/* Footer Styles */
+.company-footer {
+    background-color: #00274d;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.company-footer p {
+    margin: 0;
+}
+
+.company-footer a {
+    color: #ffcd00;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.company-footer a:hover {
+    text-decoration: underline;
+}
+/* job post css */
+
+/* Common Styles */
+.container {
+    width: 50%;
+
+    margin:  auto;
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    padding: 30px; /* Increased padding for a more spacious feel */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+}
+.head-form{
+    text-align: center;
+    color:rgb(56, 56, 61);
+    font-weight: 600;
+    font-size: large;
+
+}
+.company_name{
+    color:green;
+}
+.container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    margin-bottom: 20px; /* Increased margin for better spacing */
+}
+
+label {
+    font-weight: bold; /* Bold text for emphasis */
+    margin-bottom: 10px; /* Increased margin for better separation */
+    display: block; /* Ensures labels take full width */
+    color: #333; /* Darker color for better contrast */
+    font-size: 16px; /* Increased font size for better readability */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+}
+
+/* Optional: Add a focus effect for labels when input is focused */
+input:focus + label,
+textarea:focus + label {
+    color: #4CAF50; /* Change color when input is focused */
+}
+
+/* Optional: Add a hover effect for labels */
+label:hover {
+    color: #007BFF; /* Change color on hover */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+/* Optional: Add a subtle text-shadow for depth */
+label {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Adds depth to the label */
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+    width: 90%;
+    display:flex;
+    margin:auto;
+    padding: 14px; /* Increased padding for a more comfortable input area */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px; /* Slightly increased font size for better readability */
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #646765;
+    outline: none;
+    box-shadow: 0 0 8px rgba(100, 103, 100, 0.5);
+}
+input[readonly] {
+    
+    background-color: #ccc2c27c; /* Light grey background */
+    color: #333; /* Darker text color for better contrast */
+    cursor: not-allowed; /* Change cursor to indicate it's readonly */
+}
+
+textarea {
+    resize: vertical; /* Allows vertical resizing only */
+}
+/* Placeholder styling for text inputs */
+input::placeholder,
+textarea::placeholder {
+    color: #999; /* Light gray color for placeholder text */
+    font-style: italic; /* Italic style for placeholder text */
+    opacity: 0.8; /* Slightly transparent */
+}
+
+/* Placeholder styling for select elements (not supported in all browsers) */
+select {
+    color: #333; /* Default text color */
+}
+
+select option:disabled {
+    color: #999; /* Light gray color for disabled options */
+}
+
+/* Placeholder styling for focused inputs */
+input:focus::placeholder,
+textarea:focus::placeholder {
+    color: #1c1d1c; /* Change color on focus */
+    opacity: 0.6; /* Slightly more transparent on focus */
+}
+
+/* Button styling */
+.submit-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Error Container styling */
+.error-container {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+    display: none; /* Initially hidden */
+}
+
+/* Enhance look of error messages */
+.error-container.shown {
+    display: block;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px 0;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    textarea,
+    select {
+        font-size: 16px; /* Increase font size for better readability */
+    }
+}
+/* Spinner */
+/* Overlay styling */
+
+
+
+/* Spinner styling */
+#spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    z-index: 1001; /* On top of the overlay and preview */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+.hidden {
+    display: none;
+}
+
+.preview-container {
+   
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Above the overlay */
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh; /* Ensure content is not cut off */
+    overflow-y: auto; /* Add scrollbar if needed */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .preview-container {
+        width: 95%; /* Adjusts width for smaller screens */
+        padding: 15px; /* Reduces padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-container {
+        width: 100%; /* Full width on very small screens */
+        padding: 10px; /* Further reduces padding */
+    }
+}
+
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.preview-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.close-btn {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.close-btn:hover {
+    background: #e0e0e0;
+    transform: scale(1.1);
+}
+
+.preview-container button {
+    margin: 10px 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.submit-btn {
+    padding:15px;
+    width:100px;
+    display:block;
+  margin:auto;
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+    
+    
+    transform: scale(1.05);
+}
+
+.submit-btn:active {
+    background-color: #004085;
+}
+
+.message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    border-radius: 5px;
+    background: #28a745; /* Default green for success */
+    color: white;
+    z-index: 1001;
+}
+
+.message.hidden {
+    display: none;
+}
+
+.message.error {
+    background: #dc3545; /* Red for error */
+}
+
+
+/* Success Container */
+/* Success Container Styling */
+.success-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Ensure it’s above everything else */
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.success-content h2 {
+    margin: 0 0 10px;
+}
+
+.success-content p {
+    margin: 0 0 20px;
+}
+
+.success-content button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.success-content button:hover {
+    background-color: #45a049;
+}
+
+/* Overlay for Background Blur */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Darker and more opaque background for complete coverage */
+    backdrop-filter: blur(10px); /* Strong blur effect */
+    z-index: 999; /* Ensure it's above other elements */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show the overlay when needed */
+#overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Existing styles... */
+
+/* Error Container */
+.error-container {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Error Container hidden class */
+.hidden {
+    display: none;
+}
+

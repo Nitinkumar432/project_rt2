@@ -1,0 +1,524 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+
+
+.company-logo {
+    height: 50px;
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222933;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-logo {
+    height: 40px;
+}
+
+.company-nav {
+    display: flex;
+    align-items: center;
+}
+
+.company-nav a {
+    color: #fff;
+    margin-left: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.company-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcd00;
+    transition: width 0.3s ease;
+}
+
+.company-nav a:hover {
+    color: #ffcd00;
+}
+
+.company-nav a:hover::after {
+    width: 100%;
+}
+
+.company-nav a i {
+    margin-right: 5px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the search bar */
+    flex-grow: 1; /* Allow the search bar to take up available space */
+    margin: 0 20px; /* Add some margin for spacing */
+}
+
+.search-input {
+    height: 45px; /* Increased height for a larger input */
+    padding: 0 15px; /* Increased padding for better text visibility */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 25px; /* Slightly larger rounded corners */
+    font-size: 18px; /* Increased font size for better readability */
+    outline: none; /* Remove outline */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+    width: 30%; /* Ensure the input takes full width of the container */
+}
+
+
+
+.search-input:focus {
+    border-color: #ffcd00; /* Change border color on focus */
+}
+
+.search-icon {
+    height: 25px; /* Increased height for the icon */
+    margin-left: -35px; /* Adjust positioning relative to input */
+    cursor: pointer; /* Change cursor to pointer */
+}
+/* notification section */
+.notification-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px; /* Space between nav and notification */
+}
+
+.notification-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Adjust position */
+    right: -10px; /* Adjust position */
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px; /* Adjust size as needed */
+}
+.highlighted-company-name {
+    font-weight: 600;
+    color: #11dd41;
+    background-color: rgba(255, 205, 0, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.highlighted-company-name:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 205, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+/* Dashboard Section */
+.dashboard-section {
+    padding: 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.metrics {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    flex-wrap: wrap; /* Ensure responsiveness */
+}
+
+.metric-item {
+    /* background: linear-gradient(135deg, #004085, #00274d); */
+
+    background-color: rgb(255, 255, 255);
+    
+    font-family: "Cabin", sans-serif;;
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 10px;
+    color: #0e0d0d;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 22%; /* Keep the same size */
+    margin-bottom: 20px;
+    position: relative; /* Position the button without increasing the padding */
+}
+.inc{
+    font-size: small;
+    color:green;
+}
+.metric-item h3 {
+    font-size: 20px;
+    color:rgb(16, 16, 16);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.metric-item p {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.view-details-button {
+background-color: white;
+    /* background-color:no; */
+    /* background: linear-gradient(135deg, #7a7c7e, #58595b); */
+    color: #131313;
+   border:none;
+    border-radius: 5px;
+    padding: 8px 10px;
+    cursor: pointer;
+    position: absolute; /* Position the button absolutely within the metric-item */
+    bottom: 10px; /* Place the button at the bottom */
+   
+    left: 50%; /* Center the button horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.view-details-button:hover {
+    background-color: #bdc0c3;
+    color: #fff;
+}
+
+.arrow-icon {
+    margin-left: 5px;
+    font-size: 16px; /* Adjust size as needed */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .metric-item {
+        width: 100%; /* Make items full width on smaller screens */
+    }
+}
+
+
+/* Post Job Section */
+.post-job-section {
+    padding: 50px;
+    background-color: #fff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.post-job-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ffcd00, #ffa500, #ff6b6b, #9b59b6, #1abc9c);
+    background-size: 200% 200%;
+    animation: colorGradient 10s ease infinite;
+    z-index: -1;
+    opacity: 0.1;
+}
+
+@keyframes colorGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.post-job-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #00274d;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.post-job-description {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-post-job {
+    padding: 15px 30px;
+    background-color: #ffcd00;
+    color: #00274d;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-post-job:hover {
+    background-color: #e6b800;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Styles */
+
+
+
+/* Important Info Section */
+.important-info-section {
+    padding: 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.important-info-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.important-info-section li {
+    padding: 10px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.important-info-section li::before {
+    content: "\2713";
+    font-size: 18px;
+    color: #4caf50;
+    margin-right: 10px;
+}
+
+/* Footer Styles */
+.company-footer {
+    background-color: #00274d;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.company-footer p {
+    margin: 0;
+}
+
+.company-footer a {
+    color: #ffcd00;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.company-footer a:hover {
+    text-decoration: underline;
+}
+/* //recent job section */
+/* Styles for the recently posted jobs section */
+.recent-jobs-container {
+    padding: 30px;
+    background-color: #f4f4f4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    margin-top: 20px;
+    position: relative;
+}
+
+
+
+.recent-jobs-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.recent-jobs-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #007bff;
+}
+
+.recent-jobs-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap; /* Ensure responsiveness */
+}
+
+.recent-job-item {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.recent-job-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.job-title {
+    margin-bottom: 15px;
+    font-size: 22px; /* Increased size for better visibility */
+    font-weight: 700; /* Bolder font weight */
+    color: #333;
+    position: relative;
+}
+
+.job-title::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: #007bff; /* Accent color */
+    margin: 10px auto 0; /* Centered below the title */
+}
+
+.recent-job-item p {
+    margin: 8px 0;
+    font-size: 15px; /* Slightly larger font size */
+    color: #666;
+}
+.recent-job-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; /* Center the action buttons */
+}
+.edit-job-btn, .details-job-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-job-btn:hover, .details-job-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004494);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.details-job-btn {
+    background: linear-gradient(135deg, #28a745, #218838);
+}
+
+.details-job-btn:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34);
+}
+/* live atics of active code */
+.graph-container {
+    display: flex;
+    margin:auto;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.graph-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin:10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 10px); /* Two graphs side by side */
+    margin-bottom: 20px;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+/* spinner design */
+.spinner-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.spinner {
+    border: 4px solid #333;
+    border-top-color: transparent;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.blurred {
+    filter: blur(10px);
+}

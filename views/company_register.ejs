@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration</title>
+    <link rel="stylesheet" href="css/company_register.css">
+    <style>
+
+    </style>
+</head>
+<body>
+    <!-- spinner -->
+    <div id="spinners" class="spinners-overlay" style="display: none;">
+        <div class="spinners"></div>
+      </div>
+      
+    <header>
+        <div class="header-container">
+           <img src="/images/trpzgarsetu.png" alt="">
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/login_home">Login</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="registration-container">
+        <!-- Step 1 -->
+        <div id="step-1" class="step">
+            <h2 style="text-align: center;">Company_Registration</h2>
+            <h3>Step 1: Basic Details</h3>
+            <form id="registration-form">
+                <label for="company-name">Company Name:</label>
+                <input type="text" id="company-name" name="companyName" required placeholder="Enter your company name">
+              
+                <label for="contact-email">Contact Email:</label>
+                <input type="email" id="contact-email" name="contactEmail" required placeholder="example@company.com">
+              
+                <label for="contact-phone">Contact Phone:</label>
+                <input type="tel" id="contact-phone" name="contactPhone" required placeholder="Enter your phone number">
+              
+                <label for="company-address">Company Address:</label>
+                <input type="text" id="company-address" name="companyAddress" required placeholder="Enter your company address">
+              
+                <label for="company-registration">Company Registration Number:</label>
+                <input type="text" id="company-registration" name="companyRegistration" required placeholder="Enter registration number">
+              
+                <label for="tax-id">Tax ID:</label>
+                <input type="text" id="tax-id" name="taxId" required placeholder="Enter your tax ID">
+              
+                <button type="button" id="next-btn-1" class="action-button">Next</button>
+              </form>
+              
+        </div>
+
+        <!-- Step 2 -->
+        <div id="step-2" class="step" style="display: none;">
+            <h2 style="text-align: center;">Company_Registration</h2>
+            <h3>Step 2: Additional Details</h3>
+            <form id="additional-form">
+                <label for="industry">Industry:</label>
+                <input type="text" id="industry" name="industry" required placeholder="e.g., Technology, Finance">
+              
+                <label for="company-size">Company Size:</label>
+                <input type="number" id="company-size" name="companySize" required placeholder="Enter number of employees">
+              
+                <label for="website">Company Website:</label>
+                <input type="url" id="website" name="website" placeholder="https://www.example.com">
+              
+                <label for="company-description">Company Description:</label>
+                <textarea id="company-description" name="companyDescription" rows="4" required placeholder="Briefly describe your company"></textarea>
+              
+                <label for="finances">Annual Revenue:</label>
+                <input type="number" id="finances" name="finances" required placeholder="Enter annual revenue in USD">
+              
+                <label for="number-of-employees">Number of Employees:</label>
+                <input type="number" id="number-of-employees" name="numberOfEmployees" required placeholder="Enter total employees count">
+              
+                <button type="button" id="prev-btn-2" class="previous action-button">Previous</button>
+                <button type="button" id="next-btn-2" class="action-button">Next</button>
+              </form>
+              
+        </div>
+
+        <!-- Step 3 -->
+        <div id="step-3" class="step" style="display: none;">
+            <h2 class="step-title">Company Registration</h2>
+            <h3 class="step-subtitle">Step 3: Review & Submit</h3>
+            <form id="review-form" class="review-form">
+                <h3 class="review-heading">Review your details:</h3>
+                <div class="review-details">
+                    <p><strong>Company Name:</strong> <span id="review-company-name"></span></p>
+                    <p><strong>Contact Email:</strong> <span id="review-contact-email"></span></p>
+                    <p><strong>Contact Phone:</strong> <span id="review-contact-phone"></span></p>
+                    <p><strong>Company Address:</strong> <span id="review-company-address"></span></p>
+                    <p><strong>Company Registration Number:</strong> <span id="review-company-registration"></span></p>
+                    <p><strong>Tax ID:</strong> <span id="review-tax-id"></span></p>
+                    <p><strong>Industry:</strong> <span id="review-industry"></span></p>
+                    <p><strong>Company Size:</strong> <span id="review-company-size"></span></p>
+                    <p><strong>Website:</strong> <span id="review-website"></span></p>
+                    <p><strong>Description:</strong> <span id="review-company-description"></span></p>
+                    <p><strong>Annual Revenue:</strong> <span id="review-finances"></span></p>
+                    <p><strong>Number of Employees:</strong> <span id="review-number-of-employees"></span></p>
+                </div>
+        
+                <div class="form-buttons">
+                    <button type="button" id="prev-btn-3" class="action-button previous">Previous</button>
+                    <button type="button" id="submit-btn" class="action-button submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner-wrapper" class="spinner-wrapper">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="popup">
+        <div class="popup-content">
+            <a href="/"><span class="popup-close">&times;</span></a> 
+            <h2 id="popup-title">Success!</h2>
+            <p id="success-message"></p>
+            <p id="reference-number"></p>
+        </div>
+    </div>
+    
+
+    <script src="scripts/company_register.js">
+      
+    </script>
+</body>
+<footer>
+    <p>&copy; 2024 RozgarSetu</p>
+</footer>
+</html>
