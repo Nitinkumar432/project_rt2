@@ -4,185 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Jobs</title>
-    <style>
-        /* Add some basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-title {
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .job {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-
-        .job h3 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .job p {
-            margin: 5px 0;
-        }
-
-        .job-status {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        .pending-status {
-            color: orange;
-        }
-
-        .recent-jobs {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 30px;
-        }
-
-        .job-details {
-            margin-bottom: 10px;
-        }
-
-        .filter-section {
-            margin-bottom: 20px;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .edit-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .edit-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .verified-section, .pending-section {
-            margin-bottom: 30px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/track-jobs.css">
+    <script defer src="/scripts/track-jobs.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Track Jobs</h1>
+<header class="company-header">
+        <img src="/images/trpzgarsetu.png" alt="Company Logo" class="company-logo">
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search...">
+            <img src="https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-vector-search-icon-png-image_320926.jpg" alt="Search Icon" class="search-icon">
+        </div>
+        
+        <nav class="company-nav">
+            <a href="/track-jobs">Track-Jobs</a>
+            <a href="/">Dashboard</a>
+            <a href="/post_job">Post Job</a>
+            <a href="/profile">Profile</a>
+        </nav>
+        <div class="notification-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/4226/4226663.png" alt="Notification Icon" class="notification-icon">
+            <span class="notification-badge">3</span> <!-- Optional: Badge for unread notifications -->
+        </div>
+    </header>
+    <!-- <h1>Track Jobs for <%= company.companyName %></h1> -->
 
-        <!-- Search Bar -->
-        <input type="text" id="search-bar" class="search-bar" placeholder="Search jobs by title, location, etc." oninput="filterJobs()">
+    <!-- Search Section -->
+    <div class="search-containerss">
+        <input type="text" id="search-bar" placeholder="Search by Job Title or Location" onkeyup="filterJobs()">
+        <select id="jobStatus" onchange="filterJobs()">
+            <option value="all">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Verified">Verified</option>
+        </select>
+        <div id="spinner" class="spinner hidden"></div>
+    </div>
 
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <label for="jobStatus">Filter by Status:</label>
-            <select id="jobStatus" onchange="filterJobs()">
-                <option value="all">All</option>
-                <option value="Verifed">Verified</option>
-                <option value="Pending">Pending</option>
-            </select>
+    <!-- Jobs Sections -->
+    <div id="jobs-container">
+        <!-- Pending Jobs -->
+        <div class="jobs-section">
+            <h2>Pending Jobs</h2>
+            <div class="jobs-list" id="pending-jobs">
+                <% pendingJobs.forEach(job => { %>
+                    <div class="job-card">
+                        <h3><%= job.title %></h3>
+                        <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
+                        <p><strong>Application Deadline:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
+                        <p><strong>Status:</strong> <span class="pending-status"><i class="fas fa-clock"></i> Pending</span></p>
+                        <P><STRONG>Job Type: <%=job.jobType%></STRONG></P>
+                        <div class="button-container">
+                        <button class="view-details-btn" onclick="toggleDetails('<%= job._id %>', 'pending')">View Details</button>
+                        <button class="view-details-btn2" onclick="toggleDetails('<%= job._id %>', 'pending')">Edit Details</button>
+                        <button class="view-details-btn3" onclick="toggleDetails('<%= job._id %>', 'pending')">Delete Job</button>
+                    </div>
+                        <div class="job-details hidden" id="details-<%= job._id %>">
+                            <div class="details-content">
+                                <h4>Description:</h4>
+                                <p><%= job.description %></p>
+                                <h4>Salary:</h4>
+                                <p>₹<%= job.salary.minSalary %> - ₹<%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                                <h4>Location:</h4>
+                                <p><%= job.location.city %>, <%= job.location.state %></p>
+                                
+                                <h4>Working Hours:</h4>
+                                <p><%= job.workingHours %></p>
+                                <h4>Requirements:</h4>
+                                <p><strong>Experience:</strong> <%= job.requirements.experience %> years</p>
+                                <p><strong>Skills:</strong> <%= job.requirements.skills.join(', ') %></p>
+                                <p><strong>Education:</strong> <%= job.requirements.education %></p>
+                                <h4>Contact:</h4>
+                                <p><strong>Email:</strong> <%= job.contactEmail %></p>
+                                <p><strong>Phone:</strong> <%= job.contactPhone %></p>
+                                <h4>Benefits:</h4>
+                                <p><%= job.benefits.join(', ') %></p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
         </div>
 
-        <!-- Recent Jobs (Top 3 full details) -->
-        <div class="section-title">Recent Job Posts (Top 3)</div>
-        <div class="recent-jobs">
-            <% jobsdata.slice(0, 3).forEach(job => { %>
-                <div class="job">
-                    <h3><%= job.title %></h3>
-                    <p><strong>Description:</strong> <%= job.description %></p>
-                    <p><strong>Salary:</strong> ₹<%= job.salary.minSalary %> - ₹<%= job.salary.maxSalary %> <%= job.salary.currency %></p>
-                    <p><strong>Location:</strong> <%= job.location.city %>, <%= job.location.state %>, <%= job.location.country %></p>
-                    <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
-                    <p><strong>Status:</strong> <%= job.status %></p>
-                    <button class="edit-btn" onclick="editJob('<%= job._id %>')">Edit</button>
-                </div>
-            <% }) %>
+        <!-- Rejected Jobs -->
+        <div class="jobs-section">
+            <h2>Rejected Jobs</h2>
+            <div class="jobs-list" id="rejected-jobs">
+                <% rejectedJobs.forEach(job => { %>
+                    <div class="job-card">
+                        <h3><%= job.title %></h3>
+                        <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
+                        <p><strong>Application Deadline:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
+                        <p><strong>Status:</strong> <span class="rejected-status"><i class="fas fa-times-circle"></i> Rejected</span></p>
+                        <P><STRONG>Job Type: <%=job.jobType%></STRONG></P>
+                        <div class="button-container">
+                            <button class="view-details-btn" onclick="toggleDetails('<%= job._id %>', 'pending')">View Details</button>
+                            <button class="view-details-btn2" onclick="toggleDetails('<%= job._id %>', 'pending')">Edit Details</button>
+                            <button class="view-details-btn3" onclick="toggleDetails('<%= job._id %>', 'pending')">Delete Job</button>
+                        </div>
+                        <div class="job-details hidden" id="details-<%= job._id %>">
+                            <div class="details-content">
+                                <h4>Description:</h4>
+                                <p><%= job.description %></p>
+                                <h4>Salary:</h4>
+                                <p>₹<%= job.salary.minSalary %> - ₹<%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                                <h4>Location:</h4>
+                                <p><%= job.location.city %>, <%= job.location.state %></p>
+                               
+                                <h4>Working Hours:</h4>
+                                <p><%= job.workingHours %></p>
+                                <h4>Requirements:</h4>
+                                <p><strong>Experience:</strong> <%= job.requirements.experience %> years</p>
+                                <p><strong>Skills:</strong> <%= job.requirements.skills.join(', ') %></p>
+                                <p><strong>Education:</strong> <%= job.requirements.education %></p>
+                                <h4>Contact:</h4>
+                                <p><strong>Email:</strong> <%= job.contactEmail %></p>
+                                <p><strong>Phone:</strong> <%= job.contactPhone %></p>
+                                <h4>Benefits:</h4>
+                                <p><%= job.benefits.join(', ') %></p>
+                                <p><strong>Application Deadline:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
         </div>
 
-        <!-- Verified Jobs Section -->
-        <div class="section-title">Verified Jobs</div>
-        <div class="verified-section">
-            <% jobsdata.filter(job => job.status === 'Verifed').forEach(job => { %>
-                <div class="job">
-                    <h3><%= job.title %></h3>
-                    <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
-                    <p><strong>Applied Date:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
-                    <p><strong>Status:</strong> <span class="job-status">Verified</span></p>
-                    <button class="edit-btn" onclick="editJob('<%= job._id %>')">Edit</button>
-                </div>
-            <% }) %>
-        </div>
-
-        <!-- Pending Jobs Section -->
-        <div class="section-title">Pending Jobs</div>
-        <div class="pending-section">
-            <% jobsdata.filter(job => job.status === 'Pending').forEach(job => { %>
-                <div class="job">
-                    <h3><%= job.title %></h3>
-                    <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
-                    <p><strong>Applied Date:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
-                    <p><strong>Status:</strong> <span class="pending-status">Pending</span></p>
-                    <button class="edit-btn" onclick="editJob('<%= job._id %>')">Edit</button>
-                </div>
-            <% }) %>
+        <!-- Verified Jobs -->
+        <div class="jobs-section">
+            <h2>Verified Jobs</h2>
+            <div class="jobs-list" id="verified-jobs">
+                <% verifiedJobs.forEach(job => { %>
+                    <div class="job-card">
+                        <h3><%= job.title %></h3>
+                        <p><strong>Posted on:</strong> <%= new Date(job.jobPostDate).toDateString() %></p>
+                        <p><strong>Application Deadline:</strong> <%= new Date(job.applicationDeadline).toDateString() %></p>
+                      
+                        <p><strong>Status:</strong> <span class="verified-status"><i class="fas fa-check-circle"></i> Verified</span></p>
+                        <P><STRONG>Job Type: <%=job.jobType%></STRONG></P>
+                        <div class="button-container">
+                            <button class="view-details-btn" onclick="toggleDetails('<%= job._id %>', 'pending')">View Details</button>
+                            <button class="view-details-btn2" onclick="toggleDetails('<%= job._id %>', 'pending')">Edit Details</button>
+                            <button class="view-details-btn3" onclick="toggleDetails('<%= job._id %>', 'pending')">Delete Job</button>
+                        </div>
+                        <div class="job-details hidden" id="details-<%= job._id %>">
+                            <div class="details-content">
+                                <h4>Description:</h4>
+                                <p><%= job.description %></p>
+                                <h4>Salary:</h4>
+                                <p>₹<%= job.salary.minSalary %> - ₹<%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                                <h4>Location:</h4>
+                                <p><%= job.location.city %>, <%= job.location.state %></p>
+                            
+                                <h4>Working Hours:</h4>
+                                <p><%= job.workingHours %></p>
+                                <h4>Requirements:</h4>
+                                <p><strong>Experience:</strong> <%= job.requirements.experience %> years</p>
+                                <p><strong>Skills:</strong> <%= job.requirements.skills.join(', ') %></p>
+                                <p><strong>Education:</strong> <%= job.requirements.education %></p>
+                                <h4>Contact:</h4>
+                                <p><strong>Email:</strong> <%= job.contactEmail %></p>
+                                <p><strong>Phone:</strong> <%= job.contactPhone %></p>
+                                <h4>Benefits:</h4>
+                                <p><%= job.benefits.join(', ') %></p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
         </div>
     </div>
 
     <script>
-        // Function to filter jobs based on search input or status
+        // Show/Hide Job Details
+        function toggleDetails(id, section) {
+            const details = document.getElementById('details-' + id);
+            details.classList.toggle('hidden');
+        }
+
+        // Search & Filter Jobs
         function filterJobs() {
-            const searchBar = document.getElementById('search-bar').value.toLowerCase();
-            const jobStatus = document.getElementById('jobStatus').value;
-            const jobs = document.querySelectorAll('.job');
+            document.getElementById('spinner').classList.remove('hidden');
 
+            const statusFilter = document.getElementById('jobStatus').value.toLowerCase();
+            const searchText = document.getElementById('search-bar').value.toLowerCase();
+
+            const jobs = document.querySelectorAll('.job-card');
             jobs.forEach(job => {
-                const jobTitle = job.querySelector('h3').innerText.toLowerCase();
-                const jobStatusText = job.querySelector('.job-status') || job.querySelector('.pending-status');
+                const jobTitle = job.querySelector('h3').textContent.toLowerCase();
+                const jobStatus = job.querySelector('.pending-status') || job.querySelector('.rejected-status') || job.querySelector('.verified-status');
+                const jobStatusText = jobStatus.textContent.toLowerCase();
 
-                if (jobTitle.includes(searchBar) && (jobStatus === 'all' || jobStatusText.innerText === jobStatus)) {
+                if ((statusFilter === 'all' || jobStatusText === statusFilter) && jobTitle.includes(searchText)) {
                     job.style.display = 'block';
                 } else {
                     job.style.display = 'none';
                 }
             });
-        }
 
-        // Function to edit job (stub)
-        function editJob(jobId) {
-            alert('Edit functionality for Job ID: ' + jobId);
-            // You can redirect to an edit page or open a modal to edit the job
+            setTimeout(() => {
+                document.getElementById('spinner').classList.add('hidden');
+            }, 500); // simulate loading time
         }
     </script>
 </body>

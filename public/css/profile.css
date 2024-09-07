@@ -48,19 +48,32 @@ body {
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
 
+/* Space between icon and text */
 .sidebar ul li a i {
-    margin-right: 8px; /* Space between icon and text */
+    margin-right: 8px;
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth transition for icon size and color */
 }
 
+/* Hover effect for the link (text and icon) */
 .sidebar ul li a:hover {
     background-color: rgba(255, 255, 255, 0.2); /* Light background on hover */
     color: #007bff; /* Change text color on hover */
+    transform: scale(1.1); /* Enlarge the text and icon slightly */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
+/* Hover effect for the icon only */
+.sidebar ul li a:hover i {
+    transform: scale(1.2); /* Slightly enlarge the icon more than the text */
+    color: #007bff; /* Optionally change icon color */
+}
+
+/* Active link style */
 .sidebar ul li a.active {
     background-color: white; /* Active link background color */
     color: #007bff; /* Active link text color */
     font-weight: bold; /* Bold text for active link */
+    transform: scale(1.1); /* Keep the text and icon slightly larger for active links */
 }
 
 .sidebar h3 {

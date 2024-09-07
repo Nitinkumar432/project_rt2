@@ -29,12 +29,18 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
+const MongoStore = require('connect-mongo');
 app.use(session({
   secret: secretKey,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL, // Your MongoDB URI
+    ttl: 14 * 24 * 60 * 60 // Session expiration time (14 days here)
+  }),
   cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
+
 
 // MongoDB connection
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -58,9 +64,8 @@ const checkAuth = async (req, res, next) => {
       return res.redirect('/login_home');
     }
 
+    // Recreate session if not found
     if (!req.session.company) {
-      console.log("Valid token but no session, recreating session data");
-
       try {
         const company = await Company.findOne({ CompanyId: decoded.company_id });
         if (!company) {
@@ -70,19 +75,16 @@ const checkAuth = async (req, res, next) => {
         }
 
         req.session.company = company;
-        req.company_id = decoded.company_id;
-        console.log("Session recreated, proceeding to home");
-        next();
       } catch (err) {
         console.error('Error fetching company data:', err);
         res.clearCookie('token');
         return res.redirect('/login_home');
       }
-    } else {
-      req.company_id = decoded.company_id;
-      console.log("Token and session are valid, proceeding to home");
-      next();
     }
+
+    // Session and token valid, proceed
+    req.company_id = decoded.company_id;
+    next();
   });
 };
 
@@ -106,7 +108,7 @@ const checkNotAuth = (req, res, next) => {
     }
   });
 };
-
+// 66767
 // Route for the root URL
 app.get('/', checkNotAuth, (req, res) => {
   res.redirect('/login_home');
@@ -394,14 +396,31 @@ app.post('/check-email', async (req, res) => {
   }
 });
 // track jobs section
-app.get('/track-jobs',checkAuth,async (req,res)=>{
-  const jobsdata=await Job.find({CompanyId:req.session.company.CompanyId});
-  console.log(jobsdata);
+app.get('/track-jobs', checkAuth, async (req, res) => {
+  const companyId = req.session.company.CompanyId;
+  console.log(companyId);
 
-  console.log("track_jobs posted");
-  res.render('track-jobs',{company:req.session.company,jobsdata});
+  try {
+      const jobsdata = await Job.find({ companyId: companyId });
 
+      // Filter jobs into different categories
+      const pendingJobs = jobsdata.filter(job => job.status === 'Pending');
+      const rejectedJobs = jobsdata.filter(job => job.status === 'Rejected');
+      const verifiedJobs = jobsdata.filter(job => job.status === 'Verified');
+
+      console.log("track_jobs posted page accessed");
+      res.render('track-jobs', {
+          company: req.session.company,
+          pendingJobs,
+          rejectedJobs,
+          verifiedJobs
+      });
+  } catch (err) {
+      console.error("Error fetching jobs", err);
+      res.status(500).send('Server Error');
+  }
 });
+
 app.post('/verify-otp', async (req, res) => {
   const { email, otp, newPassword } = req.body;
   console.log(req.body);

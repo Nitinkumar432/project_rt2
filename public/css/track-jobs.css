@@ -1,0 +1,361 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa; /* Light grey background for contrast */
+    margin: 0;
+    padding: 0;
+}
+.company-logo {
+    height: 50px;
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222933;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-logo {
+    height: 40px;
+}
+
+.company-nav {
+    display: flex;
+    align-items: center;
+}
+
+.company-nav a {
+    color: #fff;
+    margin-left: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.company-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffcd00;
+    transition: width 0.3s ease;
+}
+
+.company-nav a:hover {
+    color: #ffcd00;
+}
+
+.company-nav a:hover::after {
+    width: 100%;
+}
+
+.company-nav a i {
+    margin-right: 5px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the search bar */
+    flex-grow: 1; /* Allow the search bar to take up available space */
+    margin: 10 20px; /* Add some margin for spacing */
+}
+
+.search-input {
+    height: 45px; /* Increased height for a larger input */
+    padding: 0 15px; /* Increased padding for better text visibility */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 25px; /* Slightly larger rounded corners */
+    font-size: 18px; /* Increased font size for better readability */
+    outline: none; /* Remove outline */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+    width: 30%; /* Ensure the input takes full width of the container */
+}
+
+
+
+.search-input:focus {
+    border-color: #ffcd00; /* Change border color on focus */
+}
+
+.search-icon {
+    height: 25px; /* Increased height for the icon */
+    margin-left: -35px; /* Adjust positioning relative to input */
+    cursor: pointer; /* Change cursor to pointer */
+}
+/* notification section */
+.notification-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px; /* Space between nav and notification */
+}
+
+.notification-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Adjust position */
+    right: -10px; /* Adjust position */
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px; /* Adjust size as needed */
+}
+
+.search-containerss {
+    margin-top: 10px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.search-containerss input{
+    padding: 15px;
+    margin-right: 15px;
+    border: 2px solid #3498db;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    width: 300px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.search-containerss select {
+    padding: 15px;
+    margin-right: 15px;
+    border: 2px solid #3498db;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    width: 150px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-containerss input:focus,
+.search-containerss select:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 8px rgba(41, 128, 185, 0.5);
+}.jobs-section {
+    margin: 50px auto; /* Center the jobs section */
+    max-width: 1200px; /* Limit the width for better readability */
+    padding: 20px; /* Add padding for better spacing */
+    background-color: #f9f9f9; /* Light background for contrast */
+    border-radius: 10px; /* Rounded corners for the section */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+}
+
+.job-card {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    min-height: 200px; /* Ensure a minimum height for job cards */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space out content */
+}
+
+.job-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.job-title {
+    font-size: 1.8rem;
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.job-details {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555; /* Slightly lighter color for details */
+}
+/* pending status */
+.pending-status {
+    display: inline-flex; /* Use flexbox for alignment */
+    align-items: center; /* Center align items vertically */
+    background-color: #f39c12; /* Orange background for pending status */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding around the text */
+    border-radius: 20px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+.pending-status:hover {
+    background-color: #e67e22; /* Darker shade on hover */
+}
+
+.pending-status i {
+    margin-right: 5px; /* Space between icon and text */
+}
+.rejected-status {
+    display: inline-flex; /* Use flexbox for alignment */
+    align-items: center; /* Center align items vertically */
+    background-color: #e74c3c; /* Red background for rejected status */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding around the text */
+    border-radius: 20px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+.rejected-status:hover {
+    background-color: #c0392b; /* Darker shade on hover */
+}
+
+.rejected-status i {
+    margin-right: 5px; /* Space between icon and text */
+}
+
+.verified-status {
+    display: inline-flex; /* Use flexbox for alignment */
+    align-items: center; /* Center align items vertically */
+    background-color: #2ecc71; /* Green background for verified status */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Padding around the text */
+    border-radius: 20px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+.verified-status:hover {
+    background-color: #27ae60; /* Darker shade on hover */
+}
+
+.verified-status i {
+    margin-right: 5px; /* Space between icon and text */
+}
+.job-card .details-content {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Space between items */
+}
+
+.details-row {
+    display: flex; /* Use flexbox for each row */
+    justify-content: space-between; /* Space out label and value */
+    align-items: center; /* Center align items */
+    padding: 5px 0; /* Padding for each row */
+}
+
+.details-row h4 {
+    color: #2980b9; /* Color for subheadings */
+    margin: 0; /* Remove default margin */
+    width: 150px; /* Fixed width for labels */
+}
+
+.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* New Enhancements */
+footer {
+    text-align: center; /* Center the footer text */
+    padding: 20px 0; /* Add padding */
+    background-color: #3498db; /* Footer background */
+    color: white; /* Footer text color */
+}
+
+.btn, .view-details-btn, .apply-btn {
+    font-weight: bold;
+    display: inline-block;
+    background-color: #ffffff; /* Button background */
+    color: rgb(95, 91, 91);/* Button text color */
+    padding: 10px 20px; /* Button padding */
+    border:1px solid rgb(7, 67, 231);
+    border-radius: 25px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+    margin-right: 10px; /* Space between buttons */
+}
+.view-details-btn2{
+    border:1px solid rgb(27, 247, 7);
+    display: inline-block;
+    background-color: #ffffff; /* Button background */
+    color: rgb(95, 91, 91); /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    font-weight: bold;
+    
+    border-radius: 25px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+    margin-right: 10px; /* Space between buttons */
+}
+.view-details-btn3{
+    border:1px solid red;
+    font-weight: bold;
+    display: inline-block;
+    background-color: #ffffff; /* Button background */
+    color: rgb(95, 91, 91); /* Button text color */
+    padding: 10px 20px; /* Button padding */
+   border-radius: 25px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+    margin-right: 10px; /* Space between buttons */
+}
+.view-details-btn:hover{
+    background-color: rgb(14, 134, 233);
+    color:white;
+    font-weight: bold;
+}
+.view-details-btn2:hover{
+    background-color: rgb(107, 230, 127);
+    color:white;
+    font-weight: bold;
+}
+.view-details-btn3:hover{
+    background-color: rgb(207, 71, 71);
+    color:white;
+    font-weight: bold;
+}
+
+
+.btn:hover, .view-details-btn:hover, .apply-btn:hover {
+    background-color: #2980b9; /* Darker shade on hover */
+}
+
+/* Flexbox for buttons in job card */
+.job-card .button-container {
+    display: flex; /* Use flexbox for button layout */
+    justify-content: flex-start; /* Align buttons to the start */
+    gap: 10px; /* Space between buttons */
+    margin-top: 15px; /* Space above the button container */
+}
