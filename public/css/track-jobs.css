@@ -1,5 +1,6 @@
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
     background-color: #f8f9fa; /* Light grey background for contrast */
     margin: 0;
     padding: 0;
@@ -156,6 +157,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
 }
 
+
 .job-card {
     background-color: #ffffff;
     padding: 30px;
@@ -168,7 +170,14 @@ body {
     flex-direction: column; /* Stack items vertically */
     justify-content: space-between; /* Space out content */
 }
-
+.job-card h3{
+    font-family: "Inter", sans-serif;
+    color:#1b58c9;
+    font-optical-sizing: auto;
+    font-size:x-large;
+    padding:20px;
+    font-weight: bold;
+}
 .job-card:hover {
     transform: translateY(-5px); /* Lift effect on hover */
 }
@@ -244,32 +253,61 @@ body {
 .verified-status i {
     margin-right: 5px; /* Space between icon and text */
 }
-.job-card .details-content {
+.job-card  {
     display: flex; /* Use flexbox for layout */
     flex-direction: column; /* Stack items vertically */
     gap: 10px; /* Space between items */
 }
 
-.details-row {
-    display: flex; /* Use flexbox for each row */
-    justify-content: space-between; /* Space out label and value */
-    align-items: center; /* Center align items */
-    padding: 5px 0; /* Padding for each row */
+
+.job-card .details-content {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    gap: 15px; /* Space between items */
 }
 
-.details-row h4 {
-    color: #2980b9; /* Color for subheadings */
+/* Modal background (full-screen overlay) */
+
+
+/* Details content styling */
+.details-content h4 {
+    color: #2980b9; /* Subheading color */
+    font-size: 1.25rem; /* Font size for subheadings */
     margin: 0; /* Remove default margin */
-    width: 150px; /* Fixed width for labels */
 }
+
+.details-content p {
+    color: #333; /* Text color for paragraphs */
+    font-size: 1rem; /* Font size for paragraphs */
+    line-height: 1.5; /* Line height for better readability */
+    margin: 0; /* Remove default margin */
+}
+
+.details-content .info-item {
+    display: flex; /* Flexbox for info items */
+    justify-content: space-between; /* Space out label and value */
+    padding: 10px 0; /* Padding for each info item */
+    border-bottom: 1px solid #eee; /* Light border for separation */
+}
+
+.details-content .info-item:last-child {
+    border-bottom: none; /* Remove border for the last item */
+}
+
+.details-content .info-item span {
+    font-weight: bold; /* Bold for labels */
+    color: #555; /* Darker color for labels */
+}
+
+
 
 .hidden {
     display: none;
 }
 
 .spinner {
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
     border: 10px solid #f3f3f3;
     border-top: 10px solid #3498db;
     border-radius: 50%;
@@ -358,4 +396,15 @@ footer {
     justify-content: flex-start; /* Align buttons to the start */
     gap: 10px; /* Space between buttons */
     margin-top: 15px; /* Space above the button container */
+}
+/* pending verified and rejected design  */
+.pending{
+   
+    color:rgb(204, 204, 52);
+}
+.rejected{
+    color:rgb(196, 55, 55);
+}
+.verified{
+    color:green;
 }
