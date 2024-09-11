@@ -128,7 +128,7 @@ main {
 }
 
 .login-container {
-    flex: 1;
+    flex: 1.4;
     background-color: #ffffff;
     padding: 40px;
     
@@ -238,6 +238,81 @@ button:hover {
 
 .register-link:hover {
     text-decoration: underline;
+}
+/* toogle design */
+.toggle-buttons {
+    display: flex;
+    justify-content: center; /* Centers the buttons horizontally */
+    margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 10px 20px;
+    margin: 0 10px;
+    color: #333;
+    cursor: pointer;
+    position: relative;
+   
+    transition: color 0.3s ease, transform 0.3s ease; /* Added transform for scaling */
+}
+
+/* Style for the active button (underline and bold) */
+.toggle-buttons button.active {
+    font-weight: bold;
+    color: #151bcd; /* Change the color for active button */
+    transform: scale(1.1); /* Slightly scale the active button */
+}
+
+.toggle-buttons button.active::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #151bcd;
+    bottom: -5px;
+    left: 0;
+    border-radius: 2px;
+    transition: height 0.3s ease; /* Smooth transition for underline */
+}
+
+/* Hover effect for the buttons */
+.toggle-buttons button:hover {
+    color: #4CAF50;
+    transform: scale(1.05); /* Slightly scale the button on hover */
+}
+
+.toggle-buttons button:hover::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #4CAF50;
+    bottom: -5px;
+    left: 0;
+    border-radius: 2px;
+    transition: height 0.3s ease; /* Smooth transition for underline */
+}
+
+/* Additional styling for a smoother experience */
+.toggle-buttons button::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 0; /* Start with no underline */
+    background-color: transparent; /* Start with transparent */
+    bottom: -5px;
+    left: 0;
+    border-radius: 2px;
+    transition: height 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+
+.toggle-buttons button:hover::after {
+    height: 2px; /* Show underline on hover */
+    background-color: #4CAF50; /* Change color to match hover text */
 }
 
 footer {

@@ -151,6 +151,32 @@ async function verifyOTP() {
     }
 }
 // auto write
+
+//   swaping login section
+
+// Function to show Company Login form and hide Admin Login form
+// Function to show Company Login form and hide Admin Login form
+function showCompanyLogin() {
+    document.getElementById("company-login-form").style.display = "block";
+    document.getElementById("admin-login-form").style.display = "none";
+    document.getElementById("form-title").innerText = "Login to Your Account";
+    
+    // Update active button
+    document.getElementById("company-login-btn").classList.add("active");
+    document.getElementById("admin-login-btn").classList.remove("active");
+}
+
+// Function to show Admin Login form and hide Company Login form
+function showAdminLogin() {
+    document.getElementById("company-login-form").style.display = "none";
+    document.getElementById("admin-login-form").style.display = "block";
+    document.getElementById("form-title").innerText = "Admin Login";
+    
+    // Update active button
+    document.getElementById("admin-login-btn").classList.add("active");
+    document.getElementById("company-login-btn").classList.remove("active");
+}
+// auto type
 let typed = new Typed(".auto-input", {
     strings: ["Indian", "building India", "Changing India"],
     typeSpeed: 100,

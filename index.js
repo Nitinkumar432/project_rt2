@@ -49,73 +49,210 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
 // Middleware to check if user is logged in
-const checkAuth = async (req, res, next) => {
-  const token = req.cookies.token;
+// const checkAuth = async (req, res, next) => {
+//   const companyToken = req.cookies.token;
+//   const adminToken = req.cookies.admin;
 
-  if (!token) {
-    console.log("No token found, redirecting to login");
+//   if (!companyToken && !adminToken) {
+//     console.log("No token found, redirecting to login");
+//     return res.redirect('/login_home');
+//   }
+
+//   if (companyToken) {
+//     jwt.verify(companyToken, secretKey, async (err, decoded) => {
+//       if (err) {
+//         console.log("Invalid company token, clearing cookie and redirecting to login");
+//         res.clearCookie('token');
+//         return res.redirect('/login_home');
+//       }
+
+//       if (!req.session.company) {
+//         const company = await Company.findOne({ CompanyId: decoded.company_id });
+//         if (!company) {
+//           console.log("Company data not found, redirecting to login");
+//           res.clearCookie('token');
+//           return res.redirect('/login_home');
+//         }
+
+//         req.session.company = company;
+//       }
+
+//       req.company_id = decoded.company_id;
+//       next();
+//     });
+//   } else if (adminToken) {
+//     jwt.verify(adminToken, secretKey, async (err, decoded) => {
+//       if (err) {
+//         console.log("Invalid admin token, clearing cookie and redirecting to login");
+//         res.clearCookie('admin');
+//         return res.redirect('/login_home');
+//       }
+
+//       if (!req.session.admin) {
+//         const admin = await Admin.findOne({ employee_id: decoded.admin_id });
+//         if (!admin) {
+//           console.log("Admin data not found, redirecting to login");
+//           res.clearCookie('admin');
+//           return res.redirect('/login_home');
+//         }
+
+//         req.session.admin = admin;
+//       }
+
+//       req.admin_id = decoded.admin_id;
+//       next();
+//     });
+//   }
+// };
+
+// Middleware to prevent access to login page if already logged in
+const checkNotAuth = (req, res, next) => {
+  const companyToken = req.cookies.token;
+  const adminToken = req.cookies.admin;
+
+  if (companyToken) {
+    // If a company token is found, prevent access to the login page or admin pages
+    jwt.verify(companyToken, secretKey, (err) => {
+      if (err) {
+        console.log("Invalid company token, clearing cookie and proceeding to login");
+        res.clearCookie('token');
+        return next(); // Token invalid, proceed to login page
+      } else {
+        console.log("Company token valid, redirecting to home");
+        return res.redirect('/home'); // Token valid, redirect to company home
+      }
+    });
+  } else if (adminToken) {
+    // If an admin token is found, prevent access to the login page or company pages
+    jwt.verify(adminToken, secretKey, (err) => {
+      if (err) {
+        console.log("Invalid admin token, clearing cookie and proceeding to login");
+        res.clearCookie('admin');
+        return next(); // Token invalid, proceed to login page
+      } else {
+        console.log("Admin token valid, redirecting to admin home");
+        return res.redirect('/admin_home'); // Token valid, redirect to admin home
+      }
+    });
+  } else {
+    // No token found, allow access to the login page
+    console.log("No token found, proceeding to login page");
+    return next(); // No token, proceed to login page
+  }
+};
+
+// check admin authentication
+
+const checkAdminAuth = async (req, res, next) => {
+  const adminToken = req.cookies.admin;
+  const companyToken = req.cookies.token;
+
+  // Block if company tries to access an admin route
+  if (companyToken) {
+    console.log("Company trying to access admin page, redirecting to company home");
+    return res.redirect('/home');
+  }
+
+  if (!adminToken) {
+    console.log("No admin token found, redirecting to login");
     return res.redirect('/login_home');
   }
 
-  jwt.verify(token, secretKey, async (err, decoded) => {
+  jwt.verify(adminToken, secretKey, async (err, decoded) => {
     if (err) {
-      console.log("Invalid token, clearing cookie and redirecting to login");
+      console.log("Invalid admin token, clearing cookie and redirecting to login");
+      res.clearCookie('admin');
+      return res.redirect('/login_home');
+    }
+
+    // Recreate session if not found
+    if (!req.session.admin) {
+      const admin = await Admin.findOne({ employee_id: decoded.admin_id });
+      if (!admin) {
+        console.log("Admin data not found, redirecting to login");
+        res.clearCookie('admin');
+        return res.redirect('/login_home');
+      }
+
+      req.session.admin = admin;
+    }
+
+    // Token and session are valid, proceed
+    req.admin_id = decoded.admin_id;
+    next();
+  });
+};
+
+// check company authentication
+const checkCompanyAuth = async (req, res, next) => {
+  const companyToken = req.cookies.token;
+  const adminToken = req.cookies.admin;
+
+  // Block if admin tries to access a company route
+  if (adminToken) {
+    console.log("Admin trying to access company page, redirecting to admin home");
+    return res.redirect('/admin_home');
+  }
+
+  if (!companyToken) {
+    console.log("No company token found, redirecting to login");
+    return res.redirect('/login_home');
+  }
+
+  jwt.verify(companyToken, secretKey, async (err, decoded) => {
+    if (err) {
+      console.log("Invalid company token, clearing cookie and redirecting to login");
       res.clearCookie('token');
       return res.redirect('/login_home');
     }
 
     // Recreate session if not found
     if (!req.session.company) {
-      try {
-        const company = await Company.findOne({ CompanyId: decoded.company_id });
-        if (!company) {
-          console.log("Company data not found, redirecting to login");
-          res.clearCookie('token');
-          return res.redirect('/login_home');
-        }
-
-        req.session.company = company;
-      } catch (err) {
-        console.error('Error fetching company data:', err);
+      const company = await Company.findOne({ CompanyId: decoded.company_id });
+      if (!company) {
+        console.log("Company data not found, redirecting to login");
         res.clearCookie('token');
         return res.redirect('/login_home');
       }
+
+      req.session.company = company;
     }
 
-    // Session and token valid, proceed
+    // Token and session are valid, proceed
     req.company_id = decoded.company_id;
     next();
   });
 };
 
-// Middleware to prevent access to login page if already logged in
-const checkNotAuth = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    console.log("No token found, proceeding to login page");
-    return next(); // No token, proceed to login page
-  }
-
-  jwt.verify(token, secretKey, (err) => {
-    if (err) {
-      console.log("Invalid token, clearing cookie and proceeding to login");
-      res.clearCookie('token');
-      return next(); // Token invalid, proceed to login page
-    } else {
-      console.log("Token valid, redirecting to home");
-      return res.redirect('/home'); // Token valid, redirect to home
-    }
-  });
-};
-// 66767
-// Route for the root URL
-app.get('/', checkNotAuth, (req, res) => {
-  res.redirect('/login_home');
+app.get('/admin_home', checkAdminAuth, (req, res) => {
+  const admin = req.session.admin;
+  res.render('admin_home', { admin });
 });
 
+
+// 66767
+// Route for the root URL
+app.get('/', (req, res) => {
+  const companyToken = req.cookies.token;
+  const adminToken = req.cookies.admin;
+
+  // If the user is a company, redirect to company home
+  if (companyToken) {
+    return res.redirect('/home');
+  }
+
+  // If the user is an admin, redirect to admin home
+  if (adminToken) {
+    return res.redirect('/admin_home');
+  }
+
+  // If neither company nor admin token is found, redirect to login
+  return res.redirect('/login_home');
+});
+
+
 // Route for the home page (protected)
-app.get('/home', checkAuth, (req, res) => {
+app.get('/home', checkCompanyAuth, (req, res) => {
   const company = req.session.company;
 
   if (!company) {
@@ -154,10 +291,16 @@ app.post('/company_login', async (req, res) => {
   }
 
   try {
+    // Clear admin session if present
+    if (req.session.admin) {
+      req.session.admin = null;
+      res.clearCookie('admin');
+    }
+
     const company = await Company.findOne({
       $or: [
         { CompanyId: company_id },
-        { contactEmail: company_id } 
+        { contactEmail: company_id }
       ]
     });
 
@@ -168,8 +311,7 @@ app.post('/company_login', async (req, res) => {
 
     const token = jwt.sign({ company_id }, secretKey, { expiresIn: '1h' });
 
-    res.cookie('token', token, { httpOnly: true});
-
+    res.cookie('token', token, { httpOnly: true });
     req.session.company = company;
     console.log("Login successful, session and token set");
 
@@ -179,44 +321,49 @@ app.post('/company_login', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
 app.get('/company_Register', checkNotAuth, (req, res) => {
   console.log('Company Register page accessed');
   res.render("company_register.ejs");
 });
-// mail transported code
+
 
 // admin route to login
+app.post('/admin_login', async (req, res) => {
+  const { admin_id, password } = req.body;
 
-// app.post('/admin_login', async (req, res) => {
-//   const { admin_id, password } = req.body;
-//   console.log(req.body);
+  if (!admin_id || !password) {
+    console.log("Admin ID or password missing");
+    return res.status(400).send('Admin ID and password are required.');
+  }
 
-//   if (!admin_id || !password) {
-//     console.log("Admin ID or password missing");
-//     return res.status(400).send('Admin ID and password are required.');
-//   }
+  try {
+    // Clear company session if present
+    if (req.session.company) {
+      req.session.company = null;
+      res.clearCookie('token');
+    }
 
-//   try {
-//     const admin = await Admin.findOne({ employee_id: admin_id });
+    const admin = await Admin.findOne({ employee_id: admin_id });
 
-//     if (!admin || password !== admin.password) {
-//       console.log("Incorrect Admin ID or password");
-//       return res.status(401).send('Incorrect Admin ID or password.');
-//     }
+    if (!admin || password !== admin.password) {
+      console.log("Incorrect Admin ID or password");
+      return res.status(401).send('Incorrect Admin ID or password.');
+    }
 
-//     const token = jwt.sign({ admin_id }, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ admin_id }, secretKey, { expiresIn: '1h' });
 
-//     res.cookie('token', token, { httpOnly: true });
+    res.cookie('admin', token, { httpOnly: true });
+    req.session.admin = admin;
+    console.log("Login successful, session and token set");
 
-//     req.session.admin = admin;
-//     console.log("Login successful, session and token set");
+    res.redirect('/admin_home');
+  } catch (err) {
+    console.error("Server error during login:", err);
+    res.status(500).send('Server error');
+  }
+});
 
-//     res.redirect('/home');
-//   } catch (err) {
-//     console.error("Server error during login:", err);
-//     res.status(500).send('Server error');
-//   }
-// });
 app.get('/company_Register', checkNotAuth, (req, res) => {
   console.log('Company Register page accessed');
   res.render("company_register.ejs");
@@ -348,12 +495,12 @@ app.post('/company_register', async (req, res) => {
       });
   }
 });
-app.get('/profile',checkAuth,(req,res)=>{
+app.get('/profile',checkCompanyAuth,(req,res)=>{
   const company = req.session.company;
   console.log('profile page accessed');
   res.render('profile.ejs',{company});
 });
-app.get('/post_job',checkAuth,(req,res)=>{
+app.get('/post_job',checkCompanyAuth,(req,res)=>{
   const company = req.session.company;
   console.log(`post Job page accessed by ${company.companyName}`);
   res.render('job_post.ejs',{company});
@@ -396,7 +543,7 @@ app.post('/check-email', async (req, res) => {
   }
 });
 // track jobs section
-app.get('/track-jobs', checkAuth, async (req, res) => {
+app.get('/track-jobs', checkCompanyAuth, async (req, res) => {
   const companyId = req.session.company.CompanyId;
   console.log(companyId);
 
@@ -441,7 +588,7 @@ app.post('/verify-otp', async (req, res) => {
   }
 });
 
-app.post('/post-job', checkAuth, async (req, res) => {
+app.post('/post-job', checkCompanyAuth, async (req, res) => {
   try {
       const jobData = req.body;
       console.log(jobData);
@@ -491,8 +638,126 @@ app.post('/post-job', checkAuth, async (req, res) => {
       res.status(500).json({ success: false, error: 'Failed to save job. Please try again.' });
   }
 });
+// getting verifing company
+app.get('/verify_company', async (req, res) => {
+
+
+
+
+  try {
+      const companies = await Company.find({});
+      const pendingCompanies = companies.filter(company => !company.isVerified);
+      const verifiedCompanies = companies.filter(company => company.isVerified);
+     
+      res.render('verify_company.ejs', { 
+          pendingCompanies, 
+          verifiedCompanies, 
+          
+      });
+     
+  } catch (error) {
+      console.error("Error fetching companies:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+// approving company
+
+
+
+// Helper function to generate a temporary password
+function generateTempPassword(length = 12) {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+  let tempPassword = '';
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      tempPassword += charset[randomIndex];
+  }
+  return tempPassword;
+}
+function generateCompanyId(prefix = 'RGSTU', length = 10) {
+  // Generate a numeric sequence (e.g., 6 digits from timestamp)
+  const timestamp = Date.now();
+  const numericSequence = String(timestamp % 1000000).padStart(6, '0');
+
+  // Generate a random suffix (e.g., 4 characters)
+  const randomSuffix = Math.random().toString(36).substring(2, 2 + length).toUpperCase();
+
+  // Combine prefix, numeric sequence, and random suffix
+  return `${prefix}${numericSequence}${randomSuffix}`;
+}
+app.post('/verify_company/approve/:id',checkAdminAuth, async (req, res) => {
+const user=req.session.admin;
+
+  try {
+      // Generate unique company ID and temporary password
+      const companyId = req.params.id;
+      console.log(companyId);
+      const company_id=generateCompanyId();
+      const tempPassword = generateTempPassword(); // Generate a temporary password
+
+      // Fetch company details
+      const company = await Company.findById(companyId);
+      if (!company) {
+          return res.status(404).send('Company not found');
+      }
+
+      // Create mail options
+      let mailOptions = {
+          from: process.env.EMAIL_USER, // Sender address from .env file
+          to: company.contactEmail, // Recipient's email address from the company document
+          subject: 'Account Approval and Temporary Password', // Subject line
+          text: `Your company  has been approved. Here are your details:
+          
+      Company ID: ${company_id} 
+      Temporary Password: ${tempPassword}
+      
+      Please use the temporary password to log in and change it within 48 hours. If you don't update your password within this period, you will need to request a new one.`, // Plain text body
+          html: `
+              <div style="text-align: center;">
+                  <img src="cid:companyLogo" alt="Company Logo" style="width: 150px;" />
+              </div>
+              <p>Your company has been approved. Here are your details:</p>
+              <p><strong>Company ID:</strong> ${company_id}</p>
+              <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+              <p>Please use the temporary password to log in and change it within 48 hours. If you don't update your password within this period, you will need to request a new one.</p>
+              <p>Regards,</p>
+              <p>RozgarSetu</p>`, // HTML body with embedded logo at the top
+          attachments: [
+              {
+                  filename: 'Logo', // Name of the logo file
+                  path: 'public/images/trpzgarsetu.png', // Path to the logo file
+                  cid: 'companyLogo' // Content-ID for embedding the logo
+              }
+          ]
+      };
+
+      // Send email
+      await transporter.sendMail(mailOptions);
+
+      // Decode token and update company details
+   
+
+      // Update company verification details
+      await Company.findByIdAndUpdate(companyId, {
+          isVerified: true,
+          CompanyId:company_id,
+          verify_by: user.employee_id, // Store phone number of the user verifying
+          verify_time: new Date(),
+          password: tempPassword, // Store the temporary password in the company document if needed
+          // tempPasswordExpiration: new Date(Date.now() + 48 * 60 * 60 * 1000) // Set expiration time for 48 hours from now
+      });
+
+      res.redirect('/verify_company');
+  } catch (err) {
+      console.error('Error approving company:', err);
+      res.status(500).send("Internal Server Error to approving it");
+  }
+});
 
 app.listen(3001, () => {
   console.log(chalk.green.bold('Server is running on port 3001'));
   console.log(chalk.blue('Server listing on: http://localhost:3001'));
 });
+
+
+

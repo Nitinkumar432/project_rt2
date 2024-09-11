@@ -40,35 +40,58 @@
 
                
             </div>
-            
             <div class="login-container">
-                <h2>Login to Your  Account</h2>
-                <form id="login-form" action="/company_login" method="POST" class="login-form">
+                <h2 id="form-title">Login to Your Account</h2>
+            
+                <!-- Toggle Buttons to Switch Between Forms -->
+                <div class="toggle-buttons">
+                    <button type="button" id="company-login-btn" class="active" onclick="showCompanyLogin()">Company Login</button>
+                    <button type="button" id="admin-login-btn" onclick="showAdminLogin()">Admin Login</button>
+                </div>
+            
+                <!-- Company Login Form (default visible) -->
+                <form id="company-login-form" action="/company_login" method="POST" class="login-form">
                     <div class="form-group">
-                        <label for="company_id">Company ID or Email Id</label>
-                        <input type="text" id="company_id" name="company_id" placeholder="Enter Company ID or Email Id" required>
+                        <label for="company_id">Company ID or Email ID</label>
+                        <input type="text" id="company_id" name="company_id" placeholder="Enter Company ID or Email ID" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter Password" required>
                     </div>
                     <div class="form-group">
-                        <button type="submit" id="login-button">Login</button>
+                        <button type="submit">Login</button>
                     </div>
                     <div class="form-group">
                         <a href="#"  onclick="openModal()" class="forgot-password">Forgot Password?</a>
                     </div>
-                    <div id="spinners" class="spinners"></div>
+                    <div class="alternative-login">
+                        <h3>Don't have an account?</h3>
+                        <a href="/company_register" class="register-link">Register Here</a>
+                    </div>
                 </form>
-                <div class="alternative-login">
-                    <h3>Don't have an account?</h3>
-                    <a href="/company_register" class="register-link">Register Here</a>
-                </div>
-                <div class="loading-overlay" id="loading-overlay">
-                    <div class="loading-line"></div>
-                </div>
+            
+                <!-- Admin Login Form (initially hidden) -->
+                <form id="admin-login-form" action="/admin_login" method="POST" class="login-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="admin_email">Admin Email</label>
+                        <input type="text" id="admin_id" name="admin_id" placeholder="Enter Admin Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin_password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter Password" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Login</button>
+                    </div>
+                    <!-- <div class="form-group">
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div> -->
+                </form>
+            
+               
             </div>
-        </div>
+            
     </main>
     <!-- fogot password -->
     <div id="forgotPasswordModal" class="modal">
@@ -108,5 +131,14 @@
             </nav>
         </div>
     </footer>
+    <!-- <script>
+        let typed = new Typed(".auto-input", {
+            strings: ["Indian", "building India", "Changing India"],
+            typeSpeed: 100,
+            backSpeed: 100,
+            loop: true
+        });
+    </script> -->
+
 </body>
 </html>
