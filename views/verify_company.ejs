@@ -14,14 +14,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <style>
-      
+        /* Add any additional styles you need here */
+  
     </style>
 </head>
 <body>
     <div id="spinners" class="spinners-overlay" style="display: none;">
         <div class="spinners"></div>
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">RozgarSetu</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -37,7 +39,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="/manage_jobs">Manage Job Posts</a></li>
-                            <li><a class="dropdown-item" href="verify_company">View/Verifed Companies</a></li>
+                            <li><a class="dropdown-item" href="verify_company">View/Verify Companies</a></li>
                             <li><a class="dropdown-item" href="/view_users">View Users</a></li>
                             <li><a class="dropdown-item" href="/view_employees">View Company Employees</a></li>
                             <li><a class="dropdown-item" href="/track_activities">Track Activities</a></li>
@@ -49,22 +51,23 @@
             </div>
         </div>
     </nav>
-   
-    
-    <div class="containers">
-        <h1>Verify Companies</h1>
 
+    <div class="containers">
+        <div class="my-4">
+            <input type="text" id="search-input" class="form-control" placeholder="Search by Company Name or Number">
+        </div>
+        <h1>Verify Companies</h1>
 
         <div>
             <h2 class="section-title">Pending Verification</h2>
             <% if (pendingCompanies.length > 0) { %>
-                <ul>
+                <ul id="company-list">
                     <% pendingCompanies.forEach(company => { %>
-                        <li class="pending">
+                        <li class="pending company-item">
                             <h3><%= company.companyName %></h3> 
                             <strong>Email:</strong> <%= company.contactEmail %>
                             <form action="/verify_company/approve/<%= company._id %>" method="POST">
-                                <button type="submit"  class="action-button">Approve</button>
+                                <button type="submit" class="action-button">Approve</button>
                             </form>
                             <div class="details">
                                 <p><span>Phone:</span> <%= company.contactPhone %></p>
@@ -104,7 +107,6 @@
                             <tr>
                                 <td><%= company.companyName %></td>
                                 <td><%= company.contactEmail %></td>
-                                <td><span>Verified by:</span> <%= company.verify_by %>  <%= company.verify_time.toLocaleString() %></td>
                                 <td>
                                     <button class="show-details" onclick="toggleDetails(this)">Show Details</button>
                                     <div class="details hidden">
@@ -143,19 +145,39 @@
                 button.textContent = 'Show Details';
             }
         }
+
+        // Spinner for form submission
         document.querySelectorAll('.action-button').forEach(button => {
-    button.addEventListener('click', function() {
-      // Show the spinner
-      document.getElementById('spinners').style.display = 'flex';
-      
-      // Simulate some delay (e.g., for form submission or navigation)
-      setTimeout(function() {
-        // Hide the spinner after the operation
-        document.getElementById('spinners').style.display = 'none';
-      }, 3000); // Replace with actual delay or logic for your action
-    });
-  });
-  
+            button.addEventListener('click', function() {
+                document.getElementById('spinners').style.display = 'flex';
+                setTimeout(function() {
+                    document.getElementById('spinners').style.display = 'none';
+                }, 3000);
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const companyList = document.getElementById('company-list');
+        const companyItems = document.querySelectorAll('.company-item');
+
+        searchInput.addEventListener('input', function() {
+            const searchValue = searchInput.value.toLowerCase();
+            let matchingCompanies = [];
+
+            companyItems.forEach(companyItem => {
+                const companyName = companyItem.querySelector('h3').textContent.toLowerCase();
+                if (companyName.includes(searchValue)) {
+                    matchingCompanies.push(companyItem);
+                }
+                companyItem.style.display = companyName.includes(searchValue) ? 'block' : 'none';
+            });
+
+            if (matchingCompanies.length > 0) {
+                companyList.innerHTML = '';
+                matchingCompanies.forEach(item => companyList.appendChild(item));
+            }
+        });
     </script>
 
 <footer>
@@ -203,6 +225,5 @@
         </div>
     </div>
 </footer>
-
 </body>
 </html>

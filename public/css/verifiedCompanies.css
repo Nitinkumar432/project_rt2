@@ -173,12 +173,16 @@ h1, h2 {
 
 /* Table Styling */
 .verified-table {
+    height:500px;
+    overflow-x: auto;
+ 
     width: 100%;
     border-collapse: collapse;
 }
 
 /* Table Header */
 .verified-table th {
+    
     padding: 20px; /* Increased padding for better readability */
     border: 2px solid #004d00; /* Deeper green border */
     text-align: left;
@@ -297,3 +301,4 @@ h1, h2 {
 .action-button:hover {
     background-color: #004d00;
 }
+/* spinner */

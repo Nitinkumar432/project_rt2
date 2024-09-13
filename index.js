@@ -14,7 +14,7 @@ const Company = require('./models/company_register.js');
 const Job=require('./models/job_post.js');
 const uri = process.env.MONGO_URL;
 const secretKey = process.env.JWT_SECRET;
-
+const Register=require('./models/register_data.js');
 const Admin=require('./models/admin.js');
 // Middleware setup
 app.use(express.json());
@@ -48,62 +48,6 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
-// Middleware to check if user is logged in
-// const checkAuth = async (req, res, next) => {
-//   const companyToken = req.cookies.token;
-//   const adminToken = req.cookies.admin;
-
-//   if (!companyToken && !adminToken) {
-//     console.log("No token found, redirecting to login");
-//     return res.redirect('/login_home');
-//   }
-
-//   if (companyToken) {
-//     jwt.verify(companyToken, secretKey, async (err, decoded) => {
-//       if (err) {
-//         console.log("Invalid company token, clearing cookie and redirecting to login");
-//         res.clearCookie('token');
-//         return res.redirect('/login_home');
-//       }
-
-//       if (!req.session.company) {
-//         const company = await Company.findOne({ CompanyId: decoded.company_id });
-//         if (!company) {
-//           console.log("Company data not found, redirecting to login");
-//           res.clearCookie('token');
-//           return res.redirect('/login_home');
-//         }
-
-//         req.session.company = company;
-//       }
-
-//       req.company_id = decoded.company_id;
-//       next();
-//     });
-//   } else if (adminToken) {
-//     jwt.verify(adminToken, secretKey, async (err, decoded) => {
-//       if (err) {
-//         console.log("Invalid admin token, clearing cookie and redirecting to login");
-//         res.clearCookie('admin');
-//         return res.redirect('/login_home');
-//       }
-
-//       if (!req.session.admin) {
-//         const admin = await Admin.findOne({ employee_id: decoded.admin_id });
-//         if (!admin) {
-//           console.log("Admin data not found, redirecting to login");
-//           res.clearCookie('admin');
-//           return res.redirect('/login_home');
-//         }
-
-//         req.session.admin = admin;
-//       }
-
-//       req.admin_id = decoded.admin_id;
-//       next();
-//     });
-//   }
-// };
 
 // Middleware to prevent access to login page if already logged in
 const checkNotAuth = (req, res, next) => {
@@ -753,6 +697,132 @@ const user=req.session.admin;
       res.status(500).send("Internal Server Error to approving it");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// company activity  admin side
+app.get('/user_activity', checkAdminAuth, async (req, res) => {
+  try {
+      console.log("user_activity accessed");
+
+      const searchQuery = req.query.search || null;
+
+      // Fetch the top 3 recent applicants
+      const top3Recent = await Register.find().sort({ createdAt: -1 }).limit(3);
+
+      // Fetch total users
+      const totalUsers = await Register.countDocuments();
+
+      // Dates for user activity statistics
+      const today = new Date();
+      const last7Days = new Date();
+      last7Days.setDate(today.getDate() - 7);
+
+      const last30Days = new Date();
+      last30Days.setDate(today.getDate() - 30);
+
+      const last6Months = new Date();
+      last6Months.setMonth(today.getMonth() - 6);
+
+      const last1Year = new Date();
+      last1Year.setFullYear(today.getFullYear() - 1);
+
+      // Fetch new users registered in the last 7 days
+      const newUsersLast7Days = await Register.countDocuments({ createdAt: { $gte: last7Days, $lte: today } });
+
+      // Fetch new users for last 30 days, 6 months, and 1 year
+      const statsLast30Days = await Register.countDocuments({ createdAt: { $gte: last30Days, $lte: today } });
+      const statsLast6Months = await Register.countDocuments({ createdAt: { $gte: last6Months, $lte: today } });
+      const statsLast1Year = await Register.countDocuments({ createdAt: { $gte: last1Year, $lte: today } });
+
+      // Fetch new users registered in the previous 7 days (for growth rate calculation)
+      const previous7Days = new Date();
+      previous7Days.setDate(today.getDate() - 14);
+
+      const previousUsers7Days = await Register.countDocuments({ createdAt: { $gte: previous7Days, $lte: last7Days } });
+
+      // Calculate growth rate
+      let growthRate = 0;
+      if (previousUsers7Days > 0) {
+          growthRate = ((newUsersLast7Days - previousUsers7Days) / previousUsers7Days) * 100;
+      } else if (newUsersLast7Days > 0) {
+          growthRate = 100;  // If there were no users in the previous period, assume 100% growth
+      }
+
+      // Aggregate stats for the last 7 days (for the chart)
+      const stats = await Register.aggregate([
+          {
+              $match: { createdAt: { $gte: last7Days } }
+          },
+          {
+              $group: {
+                  _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                  count: { $sum: 1 }
+              }
+          },
+          { $sort: { _id: 1 } }
+      ]);
+
+      // Search logic
+      let user = null;
+      if (searchQuery) {
+          user = await Register.findOne({
+              $or: [
+                  { employee_id: searchQuery },
+                  { name: new RegExp(searchQuery, 'i') }  // Case-insensitive search for name
+              ]
+          });
+      }
+
+      // Render the page with data
+      res.render('user_activity', {
+          totalUsers,            // Total number of users
+          newUsersLast7Days,     // New users in the last 7 days
+          growthRate,            // Growth rate percentage
+          top3Recent,            // Recent applicants
+          stats,                 // User activity statistics for graph
+          user,                  // Searched user data (if any)
+          statsLast30Days,       // New users in the last 30 days
+          statsLast6Months,      // New users in the last 6 months
+          statsLast1Year         // New users in the last 1 year
+      });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send("Error fetching user data");
+  }
+});
+
+
+
 
 app.listen(3001, () => {
   console.log(chalk.green.bold('Server is running on port 3001'));
