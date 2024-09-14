@@ -159,34 +159,51 @@
                     <div class="mb-4">
                         <div class="row">
                             <!-- Basic Information -->
-                            <div class="col-md-6">
-                                <h4 class="mb-3">Basic Information</h4>
-                                <dl class="row">
-                                    <dt class="col-sm-4">Name:</dt>
-                                    <dd class="col-sm-8"><%= user.name %></dd>
-                                    <dt class="col-sm-4">Employee ID:</dt>
-                                    <dd class="col-sm-8"><%= user.employee_id %></dd>
-                                    <dt class="col-sm-4">Phone:</dt>
-                                    <dd class="col-sm-8"><%= user.phone %></dd>
-                                    <dt class="col-sm-4">Location:</dt>
-                                    <dd class="col-sm-8"><%= user.location %></dd>
-                                    <dt class="col-sm-4">Experience:</dt>
-                                    <dd class="col-sm-8"><%= user.experience %></dd>
-                                </dl>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="mb-3">Basic Information</h4>
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Name:</dt>
+                                        <dd class="col-sm-8"><%= user.name %></dd>
+                                        
+                                        <dt class="col-sm-4">Employee ID:</dt>
+                                        <dd class="col-sm-8"><%= user.employee_id %></dd>
+                                        
+                                        <dt class="col-sm-4">Phone:</dt>
+                                        <dd class="col-sm-8"><%= user.phone %></dd>
+                                        
+                                        <dt class="col-sm-4">Location:</dt>
+                                        <dd class="col-sm-8"><%= user.location %></dd>
+                                        
+                                        <dt class="col-sm-4">Experience:</dt>
+                                        <dd class="col-sm-8"><%= user.experience %></dd>
+                                    </dl>
+                                </div>
+                                <!-- Additional Information -->
+                                <div class="col-md-6">
+                                    <h4 class="mb-3">Additional Information</h4>
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Father's Name:</dt>
+                                        <dd class="col-sm-8"><%= user.fatherName %></dd>
+                                        
+                                        <dt class="col-sm-4">Mother's Name:</dt>
+                                        <dd class="col-sm-8"><%= user.motherName %></dd>
+                                        
+                                        <dt class="col-sm-4">Age:</dt>
+                                        <dd class="col-sm-8"><%= user.age %></dd>
+                                        
+                                        <dt class="col-sm-4">State:</dt>
+                                        <dd class="col-sm-8"><%= user.state %></dd>
+                                        
+                                        <dt class="col-sm-4">District:</dt>
+                                        <dd class="col-sm-8"><%= user.district %></dd>
+                                        
+                                        <dt class="col-sm-4">Gender:</dt>
+                                        <dd class="col-sm-8"><%= user.gender %></dd>
+                                    </dl>
+                                </div>
                             </div>
-                            <!-- Additional Information -->
-                            <div class="col-md-6">
-                                <h4 class="mb-3">Additional Information</h4>
-                                <dl class="row">
-                                    <dt class="col-sm-4">Email:</dt>
-                                    <dd class="col-sm-8"><%= user.email %></dd>
-                                    <dt class="col-sm-4">Department:</dt>
-                                    <dd class="col-sm-8"><%= user.department %></dd>
-                                    <dt class="col-sm-4">Join Date:</dt>
-                                    <dd class="col-sm-8"><%= new Date(user.joinDate).toLocaleDateString() %></dd>
-                                </dl>
-                            </div>
-                        </div>
+                            
                     </div>
         
                     <!-- Action Buttons -->
@@ -194,7 +211,7 @@
                         <a href="/users/<%= user._id %>/edit" class="btn btn-warning me-2">Edit</a>
                         <a href="/users/<%= user._id %>" class="btn btn-info me-2">View Profile</a>
                         <a href="mailto:<%= user.email %>" class="btn btn-primary me-2">Send Message</a>
-                        <a href="/users/<%= user._id %>/details" class="btn btn-secondary">View More Details</a>
+                        <a href="/users/<%= user.employee_id %>" class="btn btn-secondary">View More Details</a>
                     </div>
         
                 </div>

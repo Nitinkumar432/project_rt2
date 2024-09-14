@@ -6,40 +6,35 @@
     <title>Verify Companies</title>
     <link rel="stylesheet" href="css/verifiedCompanies.css">
     <link rel="stylesheet" href="css/headerfootertempleteadmin.css">
-    <script src="scripts/verify_company.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-
     <style>
-        /* Add any additional styles you need here */
-  
+       
     </style>
 </head>
 <body>
-    <div id="spinners" class="spinners-overlay" style="display: none;">
-        <div class="spinners"></div>
+    <div id="spinner-overlay" class="spinner-overlay">
+        <div class="spinner"></div>
+        <div class="text-white mt-2">Processing...</div>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">RozgarSetu</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Sections
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="/manage_jobs">Manage Job Posts</a></li>
-                            <li><a class="dropdown-item" href="verify_company">View/Verify Companies</a></li>
+                            <li><a class="dropdown-item" href="/verify_company">View/Verify Companies</a></li>
                             <li><a class="dropdown-item" href="/view_users">View Users</a></li>
                             <li><a class="dropdown-item" href="/view_employees">View Company Employees</a></li>
                             <li><a class="dropdown-item" href="/track_activities">Track Activities</a></li>
@@ -52,37 +47,43 @@
         </div>
     </nav>
 
-    <div class="containers">
-        <div class="my-4">
-            <input type="text" id="search-input" class="form-control" placeholder="Search by Company Name or Number">
+    <div class="container my-4">
+        <h1 class="mb-4">Verify Companies</h1>
+
+        <div class="search-section mb-4">
+            <input type="text" id="search-input-pending" class="form-control" placeholder="Search in Pending Verification">
         </div>
-        <h1>Verify Companies</h1>
 
         <div>
-            <h2 class="section-title">Pending Verification</h2>
+            <h2 class="section-title mb-3">Pending Verification</h2>
             <% if (pendingCompanies.length > 0) { %>
-                <ul id="company-list">
+                <ul id="company-list" class="list-unstyled">
                     <% pendingCompanies.forEach(company => { %>
-                        <li class="pending company-item">
-                            <h3><%= company.companyName %></h3> 
-                            <strong>Email:</strong> <%= company.contactEmail %>
-                            <form action="/verify_company/approve/<%= company._id %>" method="POST">
+                        <li class="company-item">
+                            <h3><%= company.companyName %></h3>
+                            <p><strong>Email:</strong> <%= company.contactEmail %></p>
+                            <p><strong>Phone:</strong> <%= company.contactPhone %></p>
+                            <p><strong>Address:</strong> <%= company.companyAddress %></p>
+                            <p><strong>Registration:</strong> <%= company.companyRegistration %></p>
+                            <p><strong>Tax ID:</strong> <%= company.taxId %></p>
+                            <p><strong>Industry:</strong> <%= company.industry %></p>
+                            <p><strong>Size:</strong> <%= company.companySize %></p>
+                            <p><strong>Website:</strong> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
+                            <p><strong>Description:</strong> <%= company.companyDescription %></p>
+                            <p><strong>Finances:</strong> <%= company.finances %></p>
+                            <p><strong>Employees:</strong> <%= company.numberOfEmployees %></p>
+                            <p><strong>Reference:</strong> <%= company.referenceNumber %></p>
+                            <p><strong>Submission Time:</strong> <%= company.submissionTime %></p>
+                            <form action="/verify_company/approve/<%= company._id %>" method="POST" class="d-inline">
                                 <button type="submit" class="action-button">Approve</button>
                             </form>
-                            <div class="details">
-                                <p><span>Phone:</span> <%= company.contactPhone %></p>
-                                <p><span>Address:</span> <%= company.companyAddress %></p>
-                                <p><span>Registration:</span> <%= company.companyRegistration %></p>
-                                <p><span>Tax ID:</span> <%= company.taxId %></p>
-                                <p><span>Industry:</span> <%= company.industry %></p>
-                                <p><span>Size:</span> <%= company.companySize %></p>
-                                <p><span>Website:</span> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
-                                <p><span>Description:</span> <%= company.companyDescription %></p>
-                                <p><span>Finances:</span> <%= company.finances %></p>
-                                <p><span>Employees:</span> <%= company.numberOfEmployees %></p>
-                                <p><span>Reference:</span> <%= company.referenceNumber %></p>
-                                <p><span>Submission Time:</span> <%= company.submissionTime.toLocaleString() %></p>
-                            </div>
+                            <form action="/verify_company/reject/<%= company._id %>" method="POST" class="d-inline">
+                                <button type="submit" style="background-color: red; color: white;" class="action-button">Reject</button>
+                            </form>
+                            <form action="/verify_company/hold/<%= company._id %>" method="POST" class="d-inline">
+                                <button type="submit" style="background-color: yellow; color: black;" class="action-button">Hold</button>
+                            </form>
+                            
                         </li>
                     <% }) %>
                 </ul>
@@ -91,10 +92,13 @@
             <% } %>
         </div>
 
-        <div>
-            <h2 class="section-title">Verified Companies</h2>
+        <div class="mt-5">
+            <h2 class="section-title mb-3">Verified Companies</h2>
             <% if (verifiedCompanies.length > 0) { %>
-                <table class="verified-table">
+                <div class="search-section mb-4">
+                    <input type="text" id="search-input-verified" class="form-control" placeholder="Search in Verified Companies">
+                </div>
+                <table class="table table-striped table-bordered verified-table">
                     <thead>
                         <tr>
                             <th>Company Name</th>
@@ -108,8 +112,8 @@
                                 <td><%= company.companyName %></td>
                                 <td><%= company.contactEmail %></td>
                                 <td>
-                                    <button class="show-details" onclick="toggleDetails(this)">Show Details</button>
-                                    <div class="details hidden">
+                                    <button class="btn btn-info" onclick="toggleDetails(this)">Show Details</button>
+                                    <div class="details mt-3">
                                         <p><span>Verified by:</span> <%= company.verify_by %></p>
                                         <p><span>Verification time:</span> <%= company.verify_time.toLocaleString() %></p>
                                         <p><span>Phone:</span> <%= company.contactPhone %></p>
@@ -120,6 +124,10 @@
                                         <p><span>Size:</span> <%= company.companySize %></p>
                                         <p><span>Website:</span> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
                                         <p><span>Description:</span> <%= company.companyDescription %></p>
+                                        <p><span>Finances:</span> <%= company.finances %></p>
+                                        <p><span>Employees:</span> <%= company.numberOfEmployees %></p>
+                                        <p><span>Reference:</span> <%= company.referenceNumber %></p>
+                                        <p><span>Submission Time:</span> <%= company.submissionTime.toLocaleString() %></p>
                                     </div>
                                 </td>
                             </tr>
@@ -127,103 +135,99 @@
                     </tbody>
                 </table>
             <% } else { %>
-                <p>No verified companies.</p>
+                <p>No verified companies found.</p>
             <% } %>
         </div>
     </div>
 
+    <footer>
+        <div class="container">
+            <div class="row">
+                <!-- About Us Section -->
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt velit vel ex condimentum, in iaculis mauris efficitur.</p>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Us Section -->
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt"></i> Gandhi, Hajipur, India</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-envelope"></i> info@rozgarsetu.com</p>
+                </div>
+            </div>
+            <!-- Social Media Icons -->
+            <div class="row">
+                <div class="col-12 text-center social-icons">
+                    <a href="#" class="fab fa-facebook-f"></a>
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                    <a href="#" class="fab fa-linkedin-in"></a>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Bottom -->
+        <div class="footer-bottom text-center">
+            <div class="container">
+                <p>&copy; 2024 RozgarSetu. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
     <script>
         function toggleDetails(button) {
             const details = button.nextElementSibling;
-            if (details.classList.contains('hidden')) {
-                details.classList.remove('hidden');
-                details.classList.add('show');
-                button.textContent = 'Hide Details';
-            } else {
-                details.classList.add('hidden');
+            if (details.classList.contains('show')) {
                 details.classList.remove('show');
                 button.textContent = 'Show Details';
+            } else {
+                details.classList.add('show');
+                button.textContent = 'Hide Details';
             }
         }
 
-        // Spinner for form submission
-        document.querySelectorAll('.action-button').forEach(button => {
-            button.addEventListener('click', function() {
-                document.getElementById('spinners').style.display = 'flex';
-                setTimeout(function() {
-                    document.getElementById('spinners').style.display = 'none';
-                }, 3000);
+        document.getElementById('search-input-pending').addEventListener('input', function(e) {
+            const filter = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('#company-list .company-item');
+            items.forEach(item => {
+                const name = item.querySelector('h3').textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
             });
         });
 
-        // Search functionality
-        const searchInput = document.getElementById('search-input');
-        const companyList = document.getElementById('company-list');
-        const companyItems = document.querySelectorAll('.company-item');
-
-        searchInput.addEventListener('input', function() {
-            const searchValue = searchInput.value.toLowerCase();
-            let matchingCompanies = [];
-
-            companyItems.forEach(companyItem => {
-                const companyName = companyItem.querySelector('h3').textContent.toLowerCase();
-                if (companyName.includes(searchValue)) {
-                    matchingCompanies.push(companyItem);
+        document.getElementById('search-input-verified').addEventListener('input', function(e) {
+            const filter = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.verified-table tbody tr');
+            rows.forEach(row => {
+                const name = row.querySelector('td').textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
                 }
-                companyItem.style.display = companyName.includes(searchValue) ? 'block' : 'none';
             });
+        });
 
-            if (matchingCompanies.length > 0) {
-                companyList.innerHTML = '';
-                matchingCompanies.forEach(item => companyList.appendChild(item));
-            }
+        document.querySelectorAll('form[action*="/verify_company"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                document.getElementById('spinner-overlay').style.display = 'flex';
+            });
         });
     </script>
-
-<footer>
-    <div class="container">
-        <div class="row">
-            <!-- About Us Section -->
-            <div class="col-md-4">
-                <h5>About Us</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt velit vel ex condimentum, in iaculis mauris efficitur.</p>
-            </div>
-
-            <!-- Quick Links Section -->
-            <div class="col-md-4">
-                <h5>Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Us Section -->
-            <div class="col-md-4">
-                <h5>Contact Us</h5>
-                <p><i class="fas fa-map-marker-alt"></i> Gandhi, Hajipur, India</p>
-                <p><i class="fas fa-phone"></i> +123 456 7890</p>
-                <p><i class="fas fa-envelope"></i> info@rozgarsetu.com</p>
-            </div>
-        </div>
-        <!-- Social Media Icons -->
-        <div class="row">
-            <div class="col-12 text-center social-icons">
-                <a href="#" class="fab fa-facebook-f"></a>
-                <a href="#" class="fab fa-twitter"></a>
-                <a href="#" class="fab fa-instagram"></a>
-                <a href="#" class="fab fa-linkedin-in"></a>
-            </div>
-        </div>
-    </div>
-    <!-- Footer Bottom -->
-    <div class="footer-bottom text-center">
-        <div class="container">
-            <p>&copy; 2024 RozgarSetu. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
 </body>
 </html>

@@ -7,7 +7,9 @@ const jobSchema = new mongoose.Schema({
         trim: true
     },
     job_id:{
-        type:Number,
+        type:String,
+        unique:true,
+        
         
 
     },
@@ -133,8 +135,11 @@ const jobSchema = new mongoose.Schema({
         type: String,
         enum: ['Verifed', 'Reject', 'Pending', 'Hold'],
         default: 'Pending'
+    },verified_time:{
+        type:Date,
+
     }
-});
+},{ timestamps: true });
 
 const Job = mongoose.model('Job', jobSchema);
 

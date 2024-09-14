@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs</title>
+    <link rel="stylesheet" href="css/manage_jobs.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="my-4">Admin - Manage Jobs</h1>
+
+        <!-- Pending Jobs Section -->
+        <h2>Pending Jobs</h2>
+        <input type="text" id="pendingSearch" class="form-control search-bar" placeholder="Search by company name or job ID">
+
+        <div id="pendingJobs" class="scrollable">
+            <% pendingJobs.forEach(job => { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= job.title %> - <%= job.companyName %>
+                            <span class="badge badge-warning ml-2">Pending</span>
+                        </h5>
+                        <p class="card-text">Job ID: <%= job.job_id %></p>
+                        <p class="card-text">Location: <%= job.location.city %>, <%= job.location.state %></p>
+                        <p class="card-text">Salary: <%= job.salary.minSalary %> - <%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                        <p class="card-text">Posted on: <%= job.jobPostDate.toDateString() %></p>
+
+                        <!-- Action Buttons -->
+                        <form action="/verify_jobs/verify/<%= job._id %>" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-success action-button"><i class="fas fa-check-circle"></i> Verify</button>
+                        </form>
+                        <form action="/verify_jobs/reject/<%= job._id %>" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger action-button"><i class="fas fa-times-circle"></i> Reject</button>
+                        </form>
+                        <form action="/verify_jobs/hold/<%= job._id %>" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-warning action-button"><i class="fas fa-pause-circle"></i> Hold</button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- Verified Jobs Section -->
+        <h2>Verified Jobs</h2>
+        <input type="text" id="verifiedSearch" class="form-control search-bar" placeholder="Search by company name or job ID">
+
+        <div id="verifiedJobs" class="scrollable">
+            <% verifiedJobs.forEach(job => { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= job.title %> - <%= job.companyName %>
+                            <span class="badge badge-success ml-2">Verified</span>
+                        </h5>
+
+                        <p class="card-text">Job ID: <%= job.job_id %></p>
+                        <p class="card-text">Job ID: <%= job.verified_time %></p>
+                        <button class="btn btn-info action-button" data-toggle="modal" data-target="#jobModal-verified-<%= job._id %>">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </button>
+
+                        <!-- Modal for Viewing Job Details -->
+                        <div class="modal fade" id="jobModal-verified-<%= job._id %>" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="jobModalLabel">Job Details - <%= job.title %></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Company Name:</strong> <%= job.companyName %></p>
+                                        <p><strong>Location:</strong> <%= job.location.city %>, <%= job.location.state %></p>
+                                        <p><strong>Salary:</strong> <%= job.salary.minSalary %> - <%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                                        <p><strong>Job Description:</strong> <%= job.description %></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- Rejected Jobs Section -->
+        <h2>Rejected Jobs</h2>
+        <input type="text" id="rejectedSearch" class="form-control search-bar" placeholder="Search by company name or job ID">
+
+        <div id="rejectedJobs" class="scrollable">
+            <% rejectedJobs.forEach(job => { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= job.title %> - <%= job.companyName %>
+                            <span class="badge badge-danger ml-2">Rejected</span>
+                        </h5>
+                        <p class="card-text">Job ID: <%= job.job_id %></p>
+                        <button class="btn btn-info action-button" data-toggle="modal" data-target="#jobModal-rejected-<%= job._id %>">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </button>
+
+                        <!-- Modal for Viewing Job Details -->
+                        <div class="modal fade" id="jobModal-rejected-<%= job._id %>" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="jobModalLabel">Job Details - <%= job.title %></h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Company Name:</strong> <%= job.companyName %></p>
+                                        <p><strong>Location:</strong> <%= job.location.city %>, <%= job.location.state %></p>
+                                        <p><strong>Salary:</strong> <%= job.salary.minSalary %> - <%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                                        <p><strong>Job Description:</strong> <%= job.description %></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Custom JS for search functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality for Pending Jobs
+            document.getElementById('pendingSearch').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const jobs = document.querySelectorAll('#pendingJobs .card');
+                jobs.forEach(job => {
+                    const title = job.querySelector('.card-title').textContent.toLowerCase();
+                    const jobId = job.querySelector('.card-text').textContent.toLowerCase();
+                    if (title.includes(query) || jobId.includes(query)) {
+                        job.style.display = '';
+                    } else {
+                        job.style.display = 'none';
+                    }
+                });
+            });
+
+            // Search functionality for Verified Jobs
+            document.getElementById('verifiedSearch').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const jobs = document.querySelectorAll('#verifiedJobs .card');
+                jobs.forEach(job => {
+                    const title = job.querySelector('.card-title').textContent.toLowerCase();
+                    const jobId = job.querySelector('.card-text').textContent.toLowerCase();
+                    if (title.includes(query) || jobId.includes(query)) {
+                        job.style.display = '';
+                    } else {
+                        job.style.display = 'none';
+                    }
+                });
+            });
+
+            // Search functionality for Rejected Jobs
+            document.getElementById('rejectedSearch').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const jobs = document.querySelectorAll('#rejectedJobs .card');
+                jobs.forEach(job => {
+                    const title = job.querySelector('.card-title').textContent.toLowerCase();
+                    const jobId = job.querySelector('.card-text').textContent.toLowerCase();
+                    if (title.includes(query) || jobId.includes(query)) {
+                        job.style.display = '';
+                    } else {
+                        job.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+

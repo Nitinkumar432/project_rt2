@@ -16,6 +16,7 @@ const uri = process.env.MONGO_URL;
 const secretKey = process.env.JWT_SECRET;
 const Register=require('./models/register_data.js');
 const Admin=require('./models/admin.js');
+const generateJobId = require('./function/generete_job_id.js');
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -590,8 +591,15 @@ app.get('/verify_company', async (req, res) => {
 
   try {
       const companies = await Company.find({});
-      const pendingCompanies = companies.filter(company => !company.isVerified);
-      const verifiedCompanies = companies.filter(company => company.isVerified);
+     // Filter and sort pending companies (those not yet verified)
+     const pendingCompanies = companies
+     .filter(company => company.isVerified === false)  // Filter by non-verified companies
+     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by recently applied (createdAt)
+   
+   // Sort and filter verified companies (those that have been verified)
+   const verifiedCompanies = companies
+     .filter(company => company.isVerified === true)  // Filter by verified companies
+     .sort((a, b) => new Date(b.verify_time) - new Date(a.verify_time))
      
       res.render('verify_company.ejs', { 
           pendingCompanies, 
@@ -822,7 +830,68 @@ app.get('/user_activity', checkAdminAuth, async (req, res) => {
 });
 
 
+// manage jobs posted by company and verify that jobs
+// Routes to verify, reject, and hold jobs (updated to /verify_jobs)
 
+app.post('/verify_jobs/verify/:id', async (req, res) => {
+  try {
+    const newjobid = generateJobId(); // Ensure this function generates a valid job ID
+    const job = await Job.findByIdAndUpdate(
+      req.params.id, 
+      { 
+        status: 'Verified', 
+        job_id: newjobid, 
+        verified_time: Date.now()  // Call Date.now() to get the current time
+      }
+    );
+    
+    res.redirect('/manage_jobs');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+app.post('/verify_jobs/reject/:id', async (req, res) => {
+  try {
+      const job = await Job.findByIdAndUpdate(req.params.id, { status: 'Reject' });
+      res.redirect('/manage_jobs');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+});
+
+app.post('/verify_jobs/hold/:id', async (req, res) => {
+  try {
+      const job = await Job.findByIdAndUpdate(req.params.id, { status: 'Hold' });
+      res.redirect('/manage_jobs');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+});
+
+// Fetch and sort jobs based on the most recent date
+app.get('/manage_jobs', async (req, res) => {
+  try {
+      const pendingJobs = await Job.find({ status: 'Pending' }).sort({ jobPostDate: -1 });
+      const verifiedJobs = await Job.find({ status: 'Verified' }).sort({ jobPostDate: -1 });
+      const rejectedJobs = await Job.find({ status: 'Reject' }).sort({ updatedAt: -1 });  // Sort by rejection date
+      const holdJobs = await Job.find({ status: 'Hold' }).sort({ jobPostDate: -1 });
+
+      res.render('manage_jobs', {
+          pendingJobs,
+          verifiedJobs,
+          rejectedJobs,
+          holdJobs,
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+});
 
 app.listen(3001, () => {
   console.log(chalk.green.bold('Server is running on port 3001'));

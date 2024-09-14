@@ -63,7 +63,7 @@ const adminSchema = new Schema({
 adminSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
-});
+},{ timestamps: true });
 
 // Create the Admin model from the schema
 const Admin = mongoose.model('Admin', adminSchema);
