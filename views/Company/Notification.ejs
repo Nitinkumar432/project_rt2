@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Notifications</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: #f8f9fa; /* Light gray background */
+    }
+
+    .notification-container {
+      margin-top: 50px;
+    }
+
+    .notification-card {
+      animation: fadeIn 1s ease-in-out;
+      margin-bottom: 15px;
+      border-radius: 15px; /* More rounded corners */
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff; /* White card background */
+      padding: 20px; /* Added padding for better spacing */
+      position: relative; /* Positioning for button */
+      transition: transform 0.2s, box-shadow 0.2s; /* Transition for box-shadow */
+    }
+
+    .notification-card:hover {
+      transform: translateY(-5px); /* Elevate card on hover */
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification-title {
+      font-weight: bold;
+      font-size: 20px; /* Slightly larger title */
+      color: #343a40; /* Dark text */
+    }
+
+    .notification-message {
+      margin-top: 10px; /* Spacing between title and message */
+      font-size: 16px; /* Slightly larger message text */
+      color: #495057; /* Medium gray for message */
+    }
+
+    .notification-poster {
+      font-size: 14px;
+      color: #6c757d; /* Lighter gray for poster */
+      margin-top: 5px;
+    }
+
+    .mark-read-btn {
+      background-color: #007bff; /* Primary button color */
+      color: white;
+      border: none;
+      padding: 5px 8px; /* Smaller button */
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .mark-read-btn:hover {
+      background-color: #0056b3; /* Darker blue on hover */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container notification-container">
+  <h2 class="text-center mb-4">Latest Notifications</h2>
+
+  <% if (notifications.length > 0) { %>
+    <% notifications.forEach(notification => { %>
+      <div class="card notification-card">
+        <div class="notification-title"><%= notification.title %></div>
+        <div class="notification-message"><%= notification.message %></div>
+        <div class="notification-poster">Posted by: <%= notification.posterName %></div>
+        
+        <div class="d-flex justify-content-between mt-3">
+          <div class="notification-time"><%= new Date(notification.createdAt).toLocaleString() %></div>
+          <button class="mark-read-btn" onclick="markAsRead('<%= notification._id %>')">Mark as Read</button>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="alert alert-info text-center">No new notifications.</div>
+  <% } %>
+</div>
+
+<!-- Bootstrap JS & Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+  function markAsRead(notificationId) {
+    // Logic to mark the notification as read
+    console.log(`Marking notification ${notificationId} as read`);
+    // You can make an AJAX call here to update the server about the read status.
+  }
+</script>
+
+</body>
+</html>

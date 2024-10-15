@@ -11,12 +11,19 @@ const nodemailer = require('nodemailer');
 const otpMap = new Map();
 const app = express();
 const Company = require('./models/company_register.js');
+const JobApplication = require('./models/job_apply.js');
 const Job=require('./models/job_post.js');
 const uri = process.env.MONGO_URL;
 const secretKey = process.env.JWT_SECRET;
 const Register=require('./models/register_data.js');
 const Admin=require('./models/admin.js');
 const generateJobId = require('./function/generete_job_id.js');
+const Notification=require('./models/notification.js');
+const UserNOtification=require('./models/UserNotification.js');
+// download pdf kit
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -64,7 +71,7 @@ const checkNotAuth = (req, res, next) => {
         return next(); // Token invalid, proceed to login page
       } else {
         console.log("Company token valid, redirecting to home");
-        return res.redirect('/home'); // Token valid, redirect to company home
+        return res.redirect('Company/home'); // Token valid, redirect to company home
       }
     });
   } else if (adminToken) {
@@ -95,7 +102,7 @@ const checkAdminAuth = async (req, res, next) => {
   // Block if company tries to access an admin route
   if (companyToken) {
     console.log("Company trying to access admin page, redirecting to company home");
-    return res.redirect('/home');
+    return res.redirect('Company/home');
   }
 
   if (!adminToken) {
@@ -183,7 +190,7 @@ app.get('/', (req, res) => {
 
   // If the user is a company, redirect to company home
   if (companyToken) {
-    return res.redirect('/home');
+    return res.redirect('Company/home');
   }
 
   // If the user is an admin, redirect to admin home
@@ -197,7 +204,7 @@ app.get('/', (req, res) => {
 
 
 // Route for the home page (protected)
-app.get('/home', checkCompanyAuth, (req, res) => {
+app.get('/home', checkCompanyAuth, async (req, res) => {
   const company = req.session.company;
 
   if (!company) {
@@ -205,9 +212,34 @@ app.get('/home', checkCompanyAuth, (req, res) => {
     return res.redirect('/login_home');
   }
 
-  console.log("Rendering home page for company:", company.CompanyId);
-  res.render('home', { company });
+  try {
+    // Query the top 3 recently posted jobs sorted by jobPostDate in descending order
+    const top3jobpost = await Job.find({ companyId: company.CompanyId })
+   
+      .sort({ jobPostDate: -1 }) // Sort by jobPostDate in descending order (most recent first)
+      .limit(3); // Limit to 3 jobs
+      const countnotification=await Notification.countDocuments({});
+
+    // Query to count total job posts for the company
+    const totalJobPosts = await Job.countDocuments({ companyId: company.CompanyId });
+    const totalcountofapp=await JobApplication.countDocuments({companyName:company.companyName});
+    const totalActiveJobPosts = await Job.countDocuments({
+      companyId: company.CompanyId,
+      applicationDeadline: { $gt: Date.now() } 
+    });
+
+    // console.log("Top 3 recent jobs:", top3jobpost);
+    // console.log("Total job posts:", totalJobPosts);
+
+    // Render the home page with the company, the top 3 jobs, and total job posts
+    res.render('Company/home', { company, top3jobpost, totalJobPosts ,totalcountofapp,totalActiveJobPosts,countnotification});
+  } catch (error) {
+    console.error("Error fetching recent job posts:", error);
+    res.status(500).send("Internal server error");
+  }
 });
+
+
 
 // Route for the login page
 app.get('/login_home', checkNotAuth, (req, res) => {
@@ -260,7 +292,7 @@ app.post('/company_login', async (req, res) => {
     req.session.company = company;
     console.log("Login successful, session and token set");
 
-    res.redirect('/home');
+    res.redirect('home');
   } catch (err) {
     console.error("Server error during login:", err);
     res.status(500).send('Server error');
@@ -269,7 +301,7 @@ app.post('/company_login', async (req, res) => {
 
 app.get('/company_Register', checkNotAuth, (req, res) => {
   console.log('Company Register page accessed');
-  res.render("company_register.ejs");
+  res.render("Company/company_register.ejs");
 });
 
 
@@ -311,7 +343,7 @@ app.post('/admin_login', async (req, res) => {
 
 app.get('/company_Register', checkNotAuth, (req, res) => {
   console.log('Company Register page accessed');
-  res.render("company_register.ejs");
+  res.render("Company/company_register.ejs");
 });
  
 
@@ -443,14 +475,139 @@ app.post('/company_register', async (req, res) => {
 app.get('/profile',checkCompanyAuth,(req,res)=>{
   const company = req.session.company;
   console.log('profile page accessed');
-  res.render('profile.ejs',{company});
+  res.render('Company/profile.ejs',{company});
 });
 app.get('/post_job',checkCompanyAuth,(req,res)=>{
   const company = req.session.company;
   console.log(`post Job page accessed by ${company.companyName}`);
-  res.render('job_post.ejs',{company});
+  res.render('Company/job_post.ejs',{company});
 })
 
+
+// company job-post details:
+app.get('/jobs-posted-details/:companyid', checkCompanyAuth, async (req, res) => {
+  const companyid = req.params.companyid;
+  console.log(companyid);
+
+  // Fetch the top 3 recent job posts for the given company
+  const Jobdetails = await Job.find({ companyId: companyid })
+                               .sort({ jobPostDate: -1 }) 
+
+  res.render('Company/Company_Jobpostdetails', { Jobdetails });
+});
+// each job posted by company details
+
+app.get('/jobs-posted-details/:companyId/:job_id', async (req, res) => {
+  const job_id = req.params.job_id;
+  
+  
+  
+  try {
+    // Count the total documents that match the given job_id
+    const totalApplicants = await JobApplication.countDocuments({ job_id: job_id });
+ const Post=await Job.findOne({job_id});
+ 
+    // Retrieve all the applicant data that matches the job_id
+    const applicantsData = await JobApplication.find({ job_id: job_id });
+
+    // Log the job_id and applicants data
+    // console.log("Job ID:", job_id);
+    // console.log("Total Applicants:", totalApplicants);
+    // console.log("Applicants Data:", applicantsData);
+
+    res.render('Company/viewjobapplication.ejs',{totalApplicants,applicantsData,Post});
+  
+  } catch (error) {
+    console.error("Error fetching job applicants:", error);
+    res.status(500).send("Error fetching job applicants");
+  }
+});
+
+
+// doenload each job applicant details
+
+app.get('/download-job-report/:companyId/:job_id', async (req, res) => {
+  const job_id = req.params.job_id;
+
+  try {
+    // Fetch job post and applicants data
+    const Post = await Job.findOne({ job_id: job_id });
+    const applicantsData = await JobApplication.find({ job_id: job_id });
+
+    // Create a PDF document
+    const doc = new PDFDocument({ margin: 50 });
+
+    // Set the response headers to trigger a download in the browser
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=Job_Report_${job_id}.pdf`);
+
+    // Pipe the PDF to the response (send directly to the browser)
+    doc.pipe(res);
+
+    // Add a title for the PDF
+    doc.fontSize(20).text('Job Report', {
+      align: 'center',
+      underline: true,
+      lineGap: 10
+    });
+
+    // Add job post details in the center with proper spacing
+    doc.moveDown(1);
+    doc.fontSize(16).text(`Job Title: ${Post.title}`, { align: 'center' });
+    doc.text(`Job ID: ${Post.job_id}`, { align: 'center' });
+    doc.text(`Company: ${Post.companyName}`, { align: 'center' });
+    doc.text(`Deadline: ${new Date(Post.applicationDeadline).toLocaleDateString()}`, { align: 'center' });
+    doc.text(`Total Applicants: ${applicantsData.length}`, { align: 'center' });
+
+    doc.moveDown(2); // Extra space
+
+    // Draw a line separator
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+
+    // Table headers for applicants
+    doc.moveDown(2);
+    doc.fontSize(14).text('Applicant Details:', { underline: true });
+    
+    // Setup table headers with bold styling
+    const tableHeaders = ['Name', 'Employee ID', 'Registration ID', 'Phone', 'Date Applied'];
+    const tableHeaderY = doc.y + 15;
+
+    doc.fontSize(12).font('Helvetica-Bold');
+    tableHeaders.forEach((header, i) => {
+      doc.text(header, 50 + i * 100, tableHeaderY, { width: 100, align: 'left' });
+    });
+
+    doc.moveTo(50, tableHeaderY + 15).lineTo(550, tableHeaderY + 15).stroke(); // Line after headers
+    doc.font('Helvetica'); // Reset to regular font
+
+    // Loop over the applicants and display their information in table rows
+    applicantsData.forEach((applicant, index) => {
+      const rowY = doc.y + 20;
+      doc.text(applicant.name, 50, rowY, { width: 100, align: 'left' });
+      doc.text(applicant.employeeId, 150, rowY, { width: 100, align: 'left' });
+      doc.text(applicant.registrationId, 250, rowY, { width: 100, align: 'left' });
+      doc.text(applicant.phone, 350, rowY, { width: 100, align: 'left' });
+      doc.text(new Date(applicant.appliedAt).toLocaleDateString(), 450, rowY, { width: 100, align: 'left' });
+
+      // Add a separator line between rows
+      doc.moveTo(50, rowY + 15).lineTo(550, rowY + 15).stroke();
+    });
+
+    // Add footer with page number
+    doc.on('pageAdded', () => {
+      doc.fontSize(10).text(`Page ${doc.pageNumber}`, 50, 750, { align: 'center' });
+    });
+
+    // Finalize the PDF and end the stream
+    doc.end();
+
+  } catch (error) {
+    console.error("Error generating report:", error);
+    res.status(500).send("Error generating report");
+  }
+});
+
+// now we have to create to update job data how to do it
 
 // hit and trila
 // forgot password section
@@ -501,7 +658,7 @@ app.get('/track-jobs', checkCompanyAuth, async (req, res) => {
       const verifiedJobs = jobsdata.filter(job => job.status === 'Verified');
 
       console.log("track_jobs posted page accessed");
-      res.render('track-jobs', {
+      res.render('Company/track-jobs', {
           company: req.session.company,
           pendingJobs,
           rejectedJobs,
@@ -892,6 +1049,137 @@ app.get('/manage_jobs', async (req, res) => {
       res.status(500).send('Server Error');
   }
 });
+// admin  psting notification  for all company 
+
+app.get('/admin/post-notification',checkAdminAuth, (req, res) => {
+  res.render('Admin/postNotification.ejs');
+});
+
+// Route to handle the form submission and save the notification
+app.post('/admin/post-notification',checkAdminAuth, async (req, res) => {
+  const admin=req.session.admin;
+  const { title, message } = req.body;
+  
+  try {
+    // Create a new notification
+    const newNotification = new Notification({
+      title: title,
+      message: message,
+      adminId: admin.username,
+    });
+
+    // Save the notification to the database
+    await newNotification.save();
+    
+    // Send success message without redirecting
+    res.status(200).json({ message: 'Notification posted successfully!' });
+  } catch (error) {
+    console.error("Error posting notification:", error);
+    res.status(500).json({ message: 'Error posting notification' });
+  }
+});
+// gettign all info:
+app.get('/company/notifications', async (req, res) => {
+  try {
+    // Fetch all notifications from the database
+    const notifications = await Notification.find().sort({ createdAt: -1 });
+    
+    res.render('Company/Notification.ejs', { notifications });
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).send("Error fetching notifications");
+  }
+});
+
+// mark as read user notification:
+
+
+
+
+// track job post and update by admin
+// Fetch verified jobs
+// Render Verified Jobs Page
+// Fetch verified jobs
+// Fetch verified jobs
+// Fetch verified jobs for admin tracking
+app.get('/admin_track_post', async (req, res) => {
+  try {
+    const jobs = await Job.find({ status: 'Verified' });
+    res.render('verifiedJobs', { jobs });
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    res.status(500).json({ message: 'Error fetching jobs', error });
+  }
+});
+
+// Update job details
+app.post('/jobs/update', async (req, res) => {
+  const {
+    jobId,
+    title,
+    description,
+    totalPost,
+    salaryMin,
+    salaryMax,
+    jobType,
+    workingHours,
+    companyName,
+    companyLogo,
+    companyWebsite,
+    location,
+    requirements,
+    contactEmail,
+    contactPhone,
+    benefits,
+    applicationDeadline,
+  } = req.body;
+
+  try {
+    const job = await Job.findOne({ job_id: jobId });
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+
+    // Update job properties
+    job.title = title;
+    job.description = description;
+    job.total_post = totalPost;
+    job.salary.minSalary = salaryMin;
+    job.salary.maxSalary = salaryMax;
+    job.jobType = jobType;
+    job.workingHours = workingHours;
+    job.companyName = companyName;
+    job.companyLogo = companyLogo;
+    job.companyWebsite = companyWebsite;
+    job.location = location;
+    job.requirements = requirements;
+    job.contactEmail = contactEmail;
+    job.contactPhone = contactPhone;
+    job.benefits = benefits;
+    job.applicationDeadline = applicationDeadline;
+
+    await job.save();
+    res.json({ message: 'Job updated successfully!' });
+  } catch (error) {
+    console.error('Error updating job:', error);
+    res.status(500).json({ message: 'Error updating job', error });
+  }
+});
+
+// Delete job
+app.delete('/jobs/delete/:jobId', async (req, res) => {
+  const { jobId } = req.params;
+  try {
+    const result = await Job.deleteOne({ job_id: jobId });
+    if (result.deletedCount === 0) return res.status(404).json({ message: 'Job not found' });
+
+    res.json({ message: 'Job deleted successfully!' });
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    res.status(500).json({ message: 'Error deleting job', error });
+  }
+});
+
+
+
 
 app.listen(3001, () => {
   console.log(chalk.green.bold('Server is running on port 3001'));

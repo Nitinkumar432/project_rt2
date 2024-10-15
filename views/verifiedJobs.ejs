@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Track Post</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/verifedjobstc.css">
+  <script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script defer src="/js/script.js"></script>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary"><i class="fas fa-briefcase"></i> Verified Job Posts</h1>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+      <div class="col-md-6 offset-md-3">
+        <div class="input-group">
+          <span class="input-group-text bg-primary text-white"><i class="fas fa-search"></i></span>
+          <input type="text" id="search-job" class="form-control" placeholder="Search jobs by title or description...">
+        </div>
+      </div>
+    </div>
+
+    <!-- Job List Table -->
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered table-striped">
+        <thead class="table-primary text-center">
+          <tr>
+            <th>Job ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Salary</th>
+            <th>Total Post</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="job-table">
+          <% jobs.forEach(job => { %>
+          <tr>
+            <td><%= job.job_id %></td>
+            <td><%= job.title %></td>
+            <td><%= job.description %></td>
+            <td><%= job.salary.minSalary %> - <%= job.salary.maxSalary %></td>
+            <td><%= job.totalPost %></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary edit-job" data-jobid="<%= job.job_id %>">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-outline-danger delete-job" data-jobid="<%= job.job_id %>">
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit Job Modal -->
+  <div id="edit-job-modal" class="modal fade" tabindex="-1" aria-labelledby="editJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editJobModalLabel"><i class="fas fa-edit"></i> Edit Job</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-job-form">
+            <input type="hidden" id="edit-job-id">
+            <div class="mb-3">
+              <label for="edit-job-title" class="form-label">Title</label>
+              <input type="text" class="form-control" id="edit-job-title" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-description" class="form-label">Description</label>
+              <textarea class="form-control" id="edit-job-description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-salary-min" class="form-label">Minimum Salary</label>
+              <input type="number" class="form-control" id="edit-job-salary-min" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-salary-max" class="form-label">Maximum Salary</label>
+              <input type="number" class="form-control" id="edit-job-salary-max" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-total-post" class="form-label">Total Post</label>
+              <input type="number" class="form-control" id="edit-job-total-post" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-type" class="form-label">Job Type</label>
+              <input type="text" class="form-control" id="edit-job-type" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-working-hours" class="form-label">Working Hours</label>
+              <input type="text" class="form-control" id="edit-job-working-hours" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-company-name" class="form-label">Company Name</label>
+              <input type="text" class="form-control" id="edit-job-company-name" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-company-logo" class="form-label">Company Logo URL</label>
+              <input type="url" class="form-control" id="edit-job-company-logo">
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-company-website" class="form-label">Company Website</label>
+              <input type="url" class="form-control" id="edit-job-company-website">
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-location" class="form-label">Location</label>
+              <input type="text" class="form-control" id="edit-job-location" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-requirements" class="form-label">Requirements</label>
+              <textarea class="form-control" id="edit-job-requirements" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-contact-email" class="form-label">Contact Email</label>
+              <input type="email" class="form-control" id="edit-job-contact-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-contact-phone" class="form-label">Contact Phone</label>
+              <input type="tel" class="form-control" id="edit-job-contact-phone">
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-benefits" class="form-label">Benefits</label>
+              <textarea class="form-control" id="edit-job-benefits" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="edit-job-application-deadline" class="form-label">Application Deadline</label>
+              <input type="date" class="form-control" id="edit-job-application-deadline" required>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Save Changes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-job-modal" class="modal fade" tabindex="-1" aria-labelledby="deleteJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteJobModalLabel"><i class="fas fa-trash-alt"></i> Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this job?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap and JavaScript for Modal and Interactions -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <script>
+    let deleteJobId = null;
+
+    // Search job functionality
+    document.getElementById('search-job').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#job-table tr');
+      rows.forEach(row => {
+        const title = row.cells[1].textContent.toLowerCase();
+        const description = row.cells[2].textContent.toLowerCase();
+        row.style.display = title.includes(query) || description.includes(query) ? '' : 'none';
+      });
+    });
+
+    // Edit job button click
+    document.querySelectorAll('.edit-job').forEach(button => {
+      button.addEventListener('click', function() {
+        const jobId = this.dataset.jobid;
+        // Fetch job data (you may want to use AJAX here)
+        // For now, we will just fill the modal with example data
+        document.getElementById('edit-job-id').value = jobId;
+        document.getElementById('edit-job-title').value = "Example Title";
+        document.getElementById('edit-job-description').value = "Example Description";
+        document.getElementById('edit-job-salary-min').value = 30000;
+        document.getElementById('edit-job-salary-max').value = 60000;
+        document.getElementById('edit-job-total-post').value = 5;
+        document.getElementById('edit-job-type').value = "Full Time";
+        document.getElementById('edit-job-working-hours').value = "9 AM - 5 PM";
+        document.getElementById('edit-job-company-name').value = "Example Company";
+        document.getElementById('edit-job-company-logo').value = "https://example.com/logo.png";
+        document.getElementById('edit-job-company-website').value = "https://example.com";
+        document.getElementById('edit-job-location').value = "Example Location";
+        document.getElementById('edit-job-requirements').value = "Example Requirements";
+        document.getElementById('edit-job-contact-email').value = "contact@example.com";
+        document.getElementById('edit-job-contact-phone').value = "+1234567890";
+        document.getElementById('edit-job-benefits').value = "Example Benefits";
+        document.getElementById('edit-job-application-deadline').value = "2024-12-31";
+
+        // Show the modal
+        const editModal = new bootstrap.Modal(document.getElementById('edit-job-modal'));
+        editModal.show();
+      });
+    });
+
+    // Delete job button click
+    document.querySelectorAll('.delete-job').forEach(button => {
+      button.addEventListener('click', function() {
+        deleteJobId = this.dataset.jobid;
+        const deleteModal = new bootstrap.Modal(document.getElementById('delete-job-modal'));
+        deleteModal.show();
+      });
+    });
+
+    // Confirm delete action
+    document.getElementById('confirm-delete').addEventListener('click', function() {
+      // Perform delete action (e.g., AJAX request)
+      console.log(`Deleting job ID: ${deleteJobId}`);
+      // Close the modal
+      const deleteModal = bootstrap.Modal.getInstance(document.getElementById('delete-job-modal'));
+      deleteModal.hide();
+      // Optionally remove the job row from the table
+    });
+
+    // Handle edit job form submission
+    document.getElementById('edit-job-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const jobData = {
+        jobId: document.getElementById('edit-job-id').value,
+        title: document.getElementById('edit-job-title').value,
+        description: document.getElementById('edit-job-description').value,
+        salary: {
+          minSalary: document.getElementById('edit-job-salary-min').value,
+          maxSalary: document.getElementById('edit-job-salary-max').value
+        },
+        totalPost: document.getElementById('edit-job-total-post').value,
+        type: document.getElementById('edit-job-type').value,
+        workingHours: document.getElementById('edit-job-working-hours').value,
+        companyName: document.getElementById('edit-job-company-name').value,
+        companyLogo: document.getElementById('edit-job-company-logo').value,
+        companyWebsite: document.getElementById('edit-job-company-website').value,
+        location: document.getElementById('edit-job-location').value,
+        requirements: document.getElementById('edit-job-requirements').value,
+        contactEmail: document.getElementById('edit-job-contact-email').value,
+        contactPhone: document.getElementById('edit-job-contact-phone').value,
+        benefits: document.getElementById('edit-job-benefits').value,
+        applicationDeadline: document.getElementById('edit-job-application-deadline').value,
+      };
+      console.log('Saving job data:', jobData);
+      // Perform save action (e.g., AJAX request)
+      // Close the modal
+      const editModal = bootstrap.Modal.getInstance(document.getElementById('edit-job-modal'));
+      editModal.hide();
+    });
+  </script>
+</body>
+</html>

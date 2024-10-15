@@ -9,6 +9,7 @@
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
-    "nodemailer": "^6.9.14"
+    "nodemailer": "^6.9.14",
+    "pdfkit": "^0.15.0"
   }
 }

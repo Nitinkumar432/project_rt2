@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Post Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .job-post {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .job-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .applicant-count {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #e42315;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .modal-header .close {
+            margin-top: -1rem;
+        }
+        .modal-content {
+            border-radius: 8px;
+        }
+        .btn-custom {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Job Post Details</h2>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input type="text" class="form-control" placeholder="Search job posts" id="jobSearch" onkeyup="filterJobs()">
+    </div>
+
+    <!-- Job List -->
+    <div class="list-group" id="jobList">
+        <% Jobdetails.forEach(job => { %>
+            <div class="list-group-item job-post">
+                <span class="applicant-count" id="applicantCount-<%= job.job_id %>">Live: <%= new Date(job.applicationDeadline).toLocaleDateString() %></span>
+                <h5 class="font-weight-bold"><%= job.title %></h5>
+                <p><strong>Job_ID:</strong> <%= job.job_id %></p>
+                <p><strong>Company </strong> <%= job.companyName %></p>
+                <p><strong>Location:</strong> <%= job.location.city %>, <%= job.location.state %></p>
+                <p><strong>Salary:</strong> <%= job.salary.minSalary %> - <%= job.salary.maxSalary %> <%= job.salary.currency %></p>
+                <p><strong>Application Deadline:</strong> <%= new Date(job.applicationDeadline).toLocaleDateString() %></p>
+
+                <button class="btn btn-info btn-custom" onclick="viewDetails('<%= job.job_id %>', '<%= job.description %>', '<%= job.salary.minSalary %>', '<%= job.salary.maxSalary %>')">View Details</button>
+                <button class="btn btn-secondary btn-custom" onclick="window.location.href='/jobs-posted-details/<%= job.companyId %>/<%= job.job_id %>'">View Applicants</button>
+
+                <button class="btn btn-danger btn-custom" onclick="confirmDeleteJob('<%= job.job_id %>', '<%= job.title %>')">Delete</button>
+                <button class="btn btn-warning btn-custom" onclick="editJob('<%= job.job_id %>')">Edit</button>
+                <button class="btn btn-success btn-custom" onclick="addApplicant('<%= job.job_id %>')">Add Applicant</button>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<!-- Job Details Modal -->
+<div class="modal fade" id="jobDetailsModal" tabindex="-1" aria-labelledby="jobDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobDetailsModalLabel">Job Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="jobDetailsContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal for Deleting Job -->
+<div class="modal fade" id="deleteJobModal" tabindex="-1" aria-labelledby="deleteJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteJobModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the job "<span id="jobTitleToDelete"></span>"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for filtering and handling buttons -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+// Variables to store the current job ID and title for deletion
+let currentJobId = null;
+
+function filterJobs() {
+    const input = document.getElementById('jobSearch');
+    const filter = input.value.toLowerCase();
+    const jobList = document.getElementById('jobList');
+    const jobs = jobList.getElementsByClassName('list-group-item');
+
+    for (let i = 0; i < jobs.length; i++) {
+        const jobTitle = jobs[i].getElementsByTagName("h5")[0];
+        if (jobTitle) {
+            const txtValue = jobTitle.textContent || jobTitle.innerText;
+            jobs[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+        }
+    }
+}
+
+function viewDetails(jobId, description, minSalary, maxSalary) {
+    const modalContent = `
+        <h5>Description</h5>
+        <p>${description}</p>
+        <h5>Salary Range</h5>
+        <p>${minSalary} - ${maxSalary} INR</p>`;
+    
+    document.getElementById('jobDetailsContent').innerHTML = modalContent;
+    $('#jobDetailsModal').modal('show');
+}
+
+function viewApplicants(jobId) {
+    // Logic to view applicants can be implemented here
+}
+
+function confirmDeleteJob(jobId, title) {
+    currentJobId = jobId; // Store the current Job ID
+    document.getElementById('jobTitleToDelete').textContent = title; // Set the title in the modal
+    $('#deleteJobModal').modal('show'); // Show the delete confirmation modal
+}
+
+document.getElementById('confirmDeleteButton').onclick = function() {
+    if (currentJobId) {
+        // Logic to delete the job can be implemented here
+        alert("Job ID " + currentJobId + " deleted!"); // Replace with actual delete logic
+        $('#deleteJobModal').modal('hide'); // Hide the modal after deletion
+    }
+};
+
+function editJob(jobId) {
+    // Logic to edit the job can be implemented here
+}
+</script>
+
+</body>
+</html>
