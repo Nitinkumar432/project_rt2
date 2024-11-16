@@ -86,7 +86,7 @@
       <div class="card notification-card">
         <div class="notification-title"><%= notification.title %></div>
         <div class="notification-message"><%= notification.message %></div>
-        <div class="notification-poster">Posted by: <%= notification.posterName %></div>
+        <div class="notification-poster">Posted by: <%= notification.adminId %></div>
         
         <div class="d-flex justify-content-between mt-3">
           <div class="notification-time"><%= new Date(notification.createdAt).toLocaleString() %></div>

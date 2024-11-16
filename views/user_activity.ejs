@@ -210,7 +210,7 @@
                     <div class="d-flex justify-content-end">
                         <a href="/users/<%= user._id %>/edit" class="btn btn-warning me-2">Edit</a>
                         <a href="/users/<%= user._id %>" class="btn btn-info me-2">View Profile</a>
-                        <a href="mailto:<%= user.email %>" class="btn btn-primary me-2">Send Message</a>
+                        <a href="/separateNotification/<%=user.employee_id%>" class="btn btn-primary me-2">Send Message</a>
                         <a href="/users/<%= user.employee_id %>" class="btn btn-secondary">View More Details</a>
                     </div>
         

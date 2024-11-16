@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Message Portal</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-section {
+      margin-bottom: 20px;
+    }
+    .employee-id-list {
+      margin-top: 15px;
+    }
+    .btn-remove {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px 10px;
+    }
+    .btn-remove:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4">Admin Message Portal</h2>
+    <form id="admin-message-form">
+      <div class="form-section">
+        <label for="message-title" class="form-label">Message Title:</label>
+        <input type="text" id="message-title" class="form-control" placeholder="Enter message title" required>
+      </div>
+
+      <div class="form-section">
+        <label for="message-content" class="form-label">Message Content:</label>
+        <textarea id="message-content" class="form-control" rows="5" placeholder="Enter message content" required></textarea>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Employee IDs:</label>
+        <div id="employee-id-container">
+          <div class="input-group mb-2">
+            <input type="text" class="form-control employee-id" placeholder="Enter Employee ID" value="<%= employeeId %>" readonly required style="background-color: #f0f8ff; color: #333; border: 1px solid #ccc; font-weight: 500;">
+
+            <button type="button" class="btn btn-danger btn-remove" onclick="removeEmployeeField(this)">Remove</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary mt-2" onclick="addEmployeeField()">Add Another Employee ID</button>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 mt-4">Send Message</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Function to add another Employee ID field
+    function addEmployeeField() {
+      const container = document.getElementById('employee-id-container');
+      const newField = `
+        <div class="input-group mb-2">
+          <input type="text" class="form-control employee-id" placeholder="Enter Employee ID" required>
+          <button type="button" class="btn btn-danger btn-remove" onclick="removeEmployeeField(this)">Remove</button>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', newField);
+    }
+
+    // Function to remove an Employee ID field
+    function removeEmployeeField(button) {
+      button.parentElement.remove();
+    }
+
+    // Form submission handler
+    document.getElementById('admin-message-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById('message-title').value.trim();
+      const content = document.getElementById('message-content').value.trim();
+      const employeeFields = document.querySelectorAll('.employee-id');
+      const recipients = Array.from(employeeFields).map(field => field.value.trim()).filter(id => id);
+
+      if (!title || !content || recipients.length === 0) {
+        alert('Please fill out all fields and add at least one Employee ID.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/admin/send-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content, recipients }),
+        });
+
+        if (response.ok) {
+          alert('Message sent successfully!');
+          document.getElementById('admin-message-form').reset();
+          document.getElementById('employee-id-container').innerHTML = `
+            <div class="input-group mb-2">
+              <input type="text" class="form-control employee-id" placeholder="Enter Employee ID" required>
+              <button type="button" class="btn btn-danger btn-remove" onclick="removeEmployeeField(this)">Remove</button>
+            </div>
+          `;
+        } else {
+          alert('Failed to send the message.');
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('An error occurred. Please try again later.');
+      }
+    });
+  </script>
+</body>
+</html>

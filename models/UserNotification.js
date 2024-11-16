@@ -1,10 +1,37 @@
 const mongoose = require('mongoose');
 
-const userNotificationSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-  notificationId: { type: mongoose.Schema.Types.ObjectId, required: true },
-  isRead: { type: Boolean, default: false }, // Track read status
-  createdAt: { type: Date, default: Date.now },
-});
+const notificationSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 100,
+    },
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    author: {
+      type: String,
+      default: 'Admin',
+    },
+    recipients: {
+      type: [String],
+      default: [],
+    },
+    sentAt: {
+      type: Date,
+      default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Sent', 'Failed'],
+      default: 'Pending',
+    },
+  },
+  { timestamps: true }
+);
 
-const UserNotification = mongoose.model('UserNotification', userNotificationSchema);
+module.exports = mongoose.model('notificationSchema', notificationSchema);

@@ -19,7 +19,9 @@ const Register=require('./models/register_data.js');
 const Admin=require('./models/admin.js');
 const generateJobId = require('./function/generete_job_id.js');
 const Notification=require('./models/notification.js');
-const UserNOtification=require('./models/UserNotification.js');
+const PostNotiifcationforuser=require("./models/UserNotification.js");
+const SeparateNotification=require('./models/SeparateNotification.js');
+// const CompanyNotifications=require('./models/CompanyNotification.js');
 // download pdf kit
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
@@ -219,7 +221,6 @@ app.get('/home', checkCompanyAuth, async (req, res) => {
       .sort({ jobPostDate: -1 }) // Sort by jobPostDate in descending order (most recent first)
       .limit(3); // Limit to 3 jobs
       const countnotification=await Notification.countDocuments({});
-
     // Query to count total job posts for the company
     const totalJobPosts = await Job.countDocuments({ companyId: company.CompanyId });
     const totalcountofapp=await JobApplication.countDocuments({companyName:company.companyName});
@@ -1012,7 +1013,7 @@ app.post('/verify_jobs/verify/:id', async (req, res) => {
 
 app.post('/verify_jobs/reject/:id', async (req, res) => {
   try {
-      const job = await Job.findByIdAndUpdate(req.params.id, { status: 'Reject' });
+      const job = await Job.findByIdAndUpdate(req.params.id, { status: 'Rejected' });
       res.redirect('/manage_jobs');
   } catch (error) {
       console.error(error);
@@ -1051,8 +1052,10 @@ app.get('/manage_jobs', async (req, res) => {
 });
 // admin  psting notification  for all company 
 
-app.get('/admin/post-notification',checkAdminAuth, (req, res) => {
-  res.render('Admin/postNotification.ejs');
+app.get('/admin/post-notification',checkAdminAuth, async (req, res) => {
+  const admin=req.session.admin;
+  const alladminpostdata = await Notification.find({ adminId: admin.username }).sort({ createdAt: -1 });
+  res.render('Admin/postNotification.ejs',{alladminpostdata,adminname:admin.username});
 });
 
 // Route to handle the form submission and save the notification
@@ -1093,6 +1096,71 @@ app.get('/company/notifications', async (req, res) => {
 
 // mark as read user notification:
 
+
+
+
+
+// now from here admin can send all notifcation to rozgarsetu user
+app.get('/admin/notificationtousers',checkAdminAuth,async (req, res) => {
+  const admin=req.session.admin;
+  const alladminpostdataforusers = await PostNotiifcationforuser.find({ author: admin.username }).sort({ createdAt: -1 });
+  
+  res.render('Admin/PostNotificationforuser',{success:false,alladminpostdataforusers}); // Render the EJS notification form
+});
+app.post('/admin/notificationtousers', checkAdminAuth, async (req, res) => {
+  const admin = req.session.admin;
+  const alladminpostdataforusers = await PostNotiifcationforuser.find({ author: admin.username }).sort({ createdAt: -1 });
+  try {
+    const { title, content, recipients } = req.body;
+
+    const notification = new PostNotiifcationforuser({
+      title,
+      content,
+      recipients: recipients ? recipients.split(',').map(email => email.trim()) : [],
+      author: admin.username,
+    });
+
+    await notification.save();
+
+    // Render the form with success status
+    res.render('Admin/PostNotificationforuser', { success: true,alladminpostdataforusers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('adminNotification', { success: false });
+  }
+});
+// separate notiifcation sending
+app.get('/separateNotification/:id', checkAdminAuth, (req, res) => {
+  const employeeId = req.params.id;
+
+  // Render the view and pass the employee ID to the template
+  res.render('Admin/SeparateNotification', { employeeId });
+});
+
+app.post('/admin/send-message', checkAdminAuth,async (req, res) => {
+  const admin = req.session.admin;
+  const { title, content, recipients } = req.body;
+  console.log(req.body);
+
+  if (!title || !content || !Array.isArray(recipients) || recipients.length === 0) {
+    return res.status(400).json({ message: 'Invalid data provided.' });
+  }
+
+  try {
+    const newMessage = new SeparateNotification({
+      sender:admin.username,
+      title,
+      content,
+      recipients,
+    });
+
+    await newMessage.save();
+    res.status(200).json({ message: 'Message sent successfully!' });
+  } catch (error) {
+    console.error('Error saving message:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
 
 
 

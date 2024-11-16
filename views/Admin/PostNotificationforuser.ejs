@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Send Notification</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0f4f7;
+      font-family: 'Arial', sans-serif;
+      color: #333;
+    }
+
+    .notification-form {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .notification-form:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-send {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 50px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-send:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: inset 0 2px 4px rgba(0, 123, 255, 0.2);
+    }
+
+    .alert-success {
+      background-color: #28a745;
+      color: white;
+      margin-bottom: 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .notification-list {
+      margin-top: 50px;
+    }
+
+    .notification-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .notification-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification-item h5 {
+      font-size: 1.3rem;
+      color: #333;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .notification-item p {
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .btn-edit, .btn-delete {
+      padding: 8px 15px;
+      border-radius: 50px;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin: 0 5px;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: white;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-edit:hover {
+      background-color: #e0a800;
+      transform: scale(1.05);
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-delete:hover {
+      background-color: #b02a37;
+      transform: scale(1.05);
+    }
+
+    .notification-item .created-at {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 15px;
+    }
+
+    .container {
+      max-width: 1100px;
+    }
+
+    h3, h4 {
+      color: #007bff;
+      font-weight: 700;
+    }
+
+    .btn-send {
+      width: 100%;
+    }
+
+    .notification-list .notification-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .notification-item .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="notification-form">
+      <% if (success) { %>
+        <div class="alert alert-success" role="alert">
+          Notification successfully published!
+        </div>
+      <% } %>
+      <h3 class="text-center">Send Notification to All Users</h3>
+      <form action="/admin/notificationtousers" method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" id="title" name="title" class="form-control" required placeholder="Enter notification title" maxlength="100">
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Message</label>
+          <textarea id="content" name="content" class="form-control" rows="5" required placeholder="Write your message here"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="recipients" class="form-label">Recipients (Optional)</label>
+          <input type="text" id="recipients" name="recipients" class="form-control" placeholder="Enter comma-separated emails or IDs">
+          <small class="text-muted">Leave blank to send to all users.</small>
+        </div>
+        <button type="submit" class="btn btn-send">Send Notification</button>
+      </form>
+    </div>
+
+    <!-- Display notifications -->
+    <div class="notification-list">
+      <h4 class="text-center">Your Notifications</h4>
+      <% alladminpostdataforusers.forEach(notification => { %>
+        <div class="notification-item">
+          <div class="notification-content">
+            <h5><%= notification.title %></h5>
+            <p><%= notification.content %></p>
+            <div class="created-at">
+              Posted on: <%= notification.createdAt.toDateString() %>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <a href="/admin/edit-notification/<%= notification._id %>" class="btn btn-edit">Edit</a>
+            <a href="/admin/delete-notification/<%= notification._id %>" class="btn btn-delete">Delete</a>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
